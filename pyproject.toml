@@ -1,0 +1,23 @@
+[project]
+name = "pytoolsdac"
+version = "0.0.1"
+authors = [
+  { name="Richard Pordan", email="richard.pordan@dhsc.gov.uk" },
+]
+description = "An internal Python package to facilitate working with the DAC"
+readme = "README.md"
+requires-python = ">=3.8"
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "License :: OSI Approved :: MIT License",
+    "Operating System :: OS Independent",
+    "Cloud Computing :: Microsoft Azure :: Azure Databricks"
+]
+
+[project.urls]
+Homepage = "https://github.com/DataS-DHSC/py-tools-for-dac"
+Issues = "https://github.com/DataS-DHSC/py-tools-for-dac/issues"
+
+[build-system]
+requires = ["setuptools>=61.0"]
+build-backend = "setuptools.build_meta"
