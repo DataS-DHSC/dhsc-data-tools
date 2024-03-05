@@ -1,5 +1,5 @@
 [project]
-name = "pytoolsdac"
+name = "DHSCdataPy"
 version = "0.0.1"
 authors = [
   { name="Richard Pordan", email="richard.pordan@dhsc.gov.uk" },
@@ -15,8 +15,8 @@ classifiers = [
 ]
 
 [project.urls]
-Homepage = "https://github.com/DataS-DHSC/py-tools-for-dac"
-Issues = "https://github.com/DataS-DHSC/py-tools-for-dac/issues"
+Homepage = "https://github.com/DataS-DHSC/DHSCdataPy"
+Issues = "https://github.com/DataS-DHSC/DHSCdataPy/issues"
 
 [build-system]
 requires = ["setuptools>=61.0"]
