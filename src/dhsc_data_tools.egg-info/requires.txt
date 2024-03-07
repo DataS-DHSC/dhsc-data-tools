@@ -1,0 +1,7 @@
+os
+pyodbc
+pypac
+azure-identity
+azure-keyvault-secrets
+databricks-connect
+configparser

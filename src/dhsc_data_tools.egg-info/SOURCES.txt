@@ -1,0 +1,12 @@
+LICENSE
+README.md
+pyproject.toml
+src/dhsc_data_tools/__init__.py
+src/dhsc_data_tools/dataconnect.py
+src/dhsc_data_tools/keyvault.py
+src/dhsc_data_tools/remote_compute.py
+src/dhsc_data_tools.egg-info/PKG-INFO
+src/dhsc_data_tools.egg-info/SOURCES.txt
+src/dhsc_data_tools.egg-info/dependency_links.txt
+src/dhsc_data_tools.egg-info/requires.txt
+src/dhsc_data_tools.egg-info/top_level.txt
