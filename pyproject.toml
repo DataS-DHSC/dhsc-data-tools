@@ -1,22 +1,33 @@
 [project]
-name = "DHSCdataPy"
+name = "dhsc_data_tools"
 version = "0.0.1"
 authors = [
-  { name="Richard Pordan", email="richard.pordan@dhsc.gov.uk" },
+  { name="Data Science Hub", email="datascience@dhsc.gov.uk" },
 ]
 description = "An internal Python package to facilitate working with the DAC"
 readme = "README.md"
+license = {file = "LICENSE"}
 requires-python = ">=3.8"
+dependencies = [
+  "os",
+  "pyodbc",
+  "pypac",
+  "azure-identity",
+  "azure-keyvault-secrets",
+  "databricks-connect",
+  "configparser"
+]
 classifiers = [
     "Programming Language :: Python :: 3",
     "License :: OSI Approved :: MIT License",
     "Operating System :: OS Independent",
-    "Cloud Computing :: Microsoft Azure :: Azure Databricks"
+    "Cloud Computing :: Microsoft Azure :: Azure Databricks",
+    "Private :: Do Not Upload"
 ]
 
 [project.urls]
-Homepage = "https://github.com/DataS-DHSC/DHSCdataPy"
-Issues = "https://github.com/DataS-DHSC/DHSCdataPy/issues"
+Homepage = "https://github.com/DataS-DHSC/dhsc-data-tools"
+Issues = "https://github.com/DataS-DHSC/dhsc-data-tools/issues"
 
 [build-system]
 requires = ["setuptools>=61.0"]
