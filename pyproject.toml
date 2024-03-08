@@ -15,14 +15,17 @@ dependencies = [
   "azure-identity",
   "azure-keyvault-secrets",
   "databricks-connect",
-  "configparser"
+  "configparser",
 ]
 classifiers = [
     "Programming Language :: Python :: 3",
     "License :: OSI Approved :: MIT License",
     "Operating System :: OS Independent",
+    "Operating System :: MacOS :: MacOS X",
+    "Operating System :: Microsoft :: Windows",
+    "Operating System :: POSIX :: Linux",
     "Cloud Computing :: Microsoft Azure :: Azure Databricks",
-    "Private :: Do Not Upload"
+    "Private :: Do Not Upload",
 ]
 
 [project.urls]
