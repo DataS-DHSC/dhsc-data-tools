@@ -1,4 +1,3 @@
-os
 pyodbc
 pypac
 azure-identity

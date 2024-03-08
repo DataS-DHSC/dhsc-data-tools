@@ -8,8 +8,12 @@ description = "An internal Python package to facilitate working with the DAC"
 readme = "README.md"
 license = {file = "LICENSE"}
 requires-python = ">=3.8"
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "License :: OSI Approved :: MIT License",
+    "Private :: Do Not Upload",
+]
 dependencies = [
-  "os",
   "pyodbc",
   "pypac",
   "azure-identity",
@@ -17,21 +21,11 @@ dependencies = [
   "databricks-connect",
   "configparser",
 ]
-classifiers = [
-    "Programming Language :: Python :: 3",
-    "License :: OSI Approved :: MIT License",
-    "Operating System :: OS Independent",
-    "Operating System :: MacOS :: MacOS X",
-    "Operating System :: Microsoft :: Windows",
-    "Operating System :: POSIX :: Linux",
-    "Cloud Computing :: Microsoft Azure :: Azure Databricks",
-    "Private :: Do Not Upload",
-]
 
 [project.urls]
 Homepage = "https://github.com/DataS-DHSC/dhsc-data-tools"
 Issues = "https://github.com/DataS-DHSC/dhsc-data-tools/issues"
 
 [build-system]
-requires = ["setuptools>=61.0"]
+requires = ["setuptools >= 61.0", "cython >= 0.29.0"]
 build-backend = "setuptools.build_meta"

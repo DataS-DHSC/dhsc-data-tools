@@ -1,4 +1,4 @@
-# py-tools-for-dac
+# dhsc_data_tools package
 
 **In development - not ready for use**
 
