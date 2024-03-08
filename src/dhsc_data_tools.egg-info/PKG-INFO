@@ -30,6 +30,9 @@ Project-URL: Issues, https://github.com/DataS-DHSC/dhsc-data-tools/issues
 Classifier: Programming Language :: Python :: 3
 Classifier: License :: OSI Approved :: MIT License
 Classifier: Operating System :: OS Independent
+Classifier: Operating System :: MacOS :: MacOS X
+Classifier: Operating System :: Microsoft :: Windows
+Classifier: Operating System :: POSIX :: Linux
 Classifier: Cloud Computing :: Microsoft Azure :: Azure Databricks
 Classifier: Private :: Do Not Upload
 Requires-Python: >=3.8
