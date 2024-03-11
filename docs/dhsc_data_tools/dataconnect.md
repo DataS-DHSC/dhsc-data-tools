@@ -9,6 +9,6 @@ Functions
 :   This function allows to connect to data within the DAC,
     and query it using SQL queries.
     
-    Simba Spark ODBC Driver is required.
+    Expects TENANT_NAME environment variable.
     
-    Expects environment variables for tenant name,
+    Simba Spark ODBC Driver is required.
