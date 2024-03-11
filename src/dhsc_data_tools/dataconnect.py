@@ -10,9 +10,9 @@ def db_connect(environment="prod"):
     This function allows to connect to data within the DAC,
     and query it using SQL queries.
 
-    Simba Spark ODBC Driver is required.
+    Expects TENANT_NAME environment variable.
 
-    Expects environment variables for tenant name, 
+    Simba Spark ODBC Driver is required.
     '''
 
     print("User warning: Expect two authentication pop-up windows,\nwhich may ask you to authenticate and then \n confirm 'Authentication complete.'")
@@ -42,7 +42,7 @@ def db_connect(environment="prod"):
 
     # retrieve relevant key vault secrets
     with pac_context_for_url(KVC.KVUri):
-        host_name = KVC.get_secret("dac-sql-endpoint-hostname")
+        host_name = KVC.get_secret("dac-db-host")
         ep_path = KVC.get_secret("dac-sql-endpoint-http-path")
 
     # establish connection

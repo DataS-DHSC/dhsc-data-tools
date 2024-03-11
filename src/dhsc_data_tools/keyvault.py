@@ -9,12 +9,6 @@ class kvConnection:
     Class takes an environment name argument, which must be one of 
     "dev", "test", "qa", "prod". Defaults to "prod". (Not case sensitive.)
     It will look for a corresponding key vault name in environment variables.
-
-    get_secret() method requires the name of the sought secret to be passed 
-    as an argument, and it returns the *value* of the secret.
-
-    User might have to set HTTP/HTTPS proxy as PAC context explicitly 
-    before running kvconnection.get_secret().
     '''
 
     def __init__(self, environment="prod"):
@@ -35,5 +29,12 @@ class kvConnection:
         self.client = SecretClient(vault_url=self.KVUri, credential=self.credential)
 
     def get_secret(self, secret_name):
-        #get and return key
+        '''
+        Returns the *value* of the secret.
+
+        `get_secret()` method requires the name of the sought secret to be passed as an argument.
+
+        User might have to set HTTP/HTTPS proxy as PAC context explicitly 
+        before running kvconnection.get_secret().
+        '''
         return self.client.get_secret(secret_name).value
