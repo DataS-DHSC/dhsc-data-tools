@@ -4,11 +4,14 @@ import pyodbc
 from pypac import pac_context_for_url
 from dhsc_data_tools.keyvault import kvConnection
 
-def db_connect(environment="prod"):
+def connect(environment="prod"):
 
     '''
     This function allows to connect to data within the DAC,
     and query it using SQL queries.
+
+    Accepts an environment argument, which defaults to "prod". 
+    Must be one of "dev", "qa", "test", "prod".
 
     Expects TENANT_NAME environment variable.
 
@@ -19,7 +22,10 @@ def db_connect(environment="prod"):
     
     # Using Azure CLI app ID
     client_id = "04b07795-8ddb-461a-bbee-02f9e1bf7b46"
-    tenant_name = os.environ["TENANT_NAME"]
+    try:
+        tenant_name = os.environ["TENANT_NAME"]
+    except KeyError:
+        raise KeyError("TENANT_NAME environment variable not found. \nPlease load this as it is required to connect to the DAC.")
 
     # Do not modify this variable. It represents the programmatic ID for
     # Azure Databricks along with the default scope of '/.default'.

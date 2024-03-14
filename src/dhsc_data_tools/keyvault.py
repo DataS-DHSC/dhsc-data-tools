@@ -6,7 +6,7 @@ class kvConnection:
     '''
     Key vault connection object.
     
-    Class takes an environment name argument, which must be one of 
+    Class takes an environment name parameter, which must be one of 
     "dev", "test", "qa", "prod". Defaults to "prod". (Not case sensitive.)
     It will look for a corresponding key vault name in environment variables.
     '''
@@ -14,9 +14,10 @@ class kvConnection:
     def __init__(self, environment="prod"):
         
         if environment.upper() in ["DEV", "TEST", "QA", "PROD"]:
-            vault_name = os.getenv('KEY_VAULT_'+environment.upper())
-            if vault_name:
-                self.KVUri = f"https://{vault_name}.vault.azure.net"
+            temp_vault_name = os.getenv('KEY_VAULT_NAME')
+            self.vault_name = temp_vault_name.format(env=environment.lower())
+            if self.vault_name:
+                self.KVUri = f"https://{self.vault_name}.vault.azure.net"
             else:
                 raise KeyError(f"No environment variable corresponding to KEY_VAULT_{environment.upper()}")
         else:
