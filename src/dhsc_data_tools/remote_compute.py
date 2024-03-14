@@ -2,41 +2,30 @@ import os
 import configparser
 from databricks.connect import DatabricksSession
 
-def parse_cfg(profile, file=r'.config'):
-    '''
-    Returns a dictionary of configuration values.
-
-    Takes a config profile name and a file argument. 
-    The latter defaults to .config in the same  working dir.
+def connect_cluster(profile, file=r'.config', cluster_uid=""):
+    '''Establishes a connection with a databricks compute cluster.
     
-    Requires the config file in the following way:
+    It relies on a `.config` file in the working directory, containing HOST, TOKEN, CLUSTER_ID:
     [<profile-name>]
     HOST=xxx
     TOKEN=xxx
     CLUSTER_ID=xxx
-    '''
-    config = configparser.ConfigParser()
-    config.read_file(open(file))
-
-    return {"host_url":config.get(profile, 'HOST'), 
-            "token":config.get(profile, 'TOKEN'), 
-            "cluster_id":config.get(profile, 'CLUSTER_ID')}
-
-def connect_cluster(profile, file=r'.config', cluster_uid=""):
-    '''
-    Function: remote_connect(profile, file=r'.config', cluster_uid="")
     
-    This function establishes a connection with a databricks compute cluster.
-    
-    It relies on environment a config file containing HOST, TOKEN, CLUSTER_ID.
-
-    You can also pass a cluster_id manually.
+    You can also pass a cluster_id parameter manually, which will override the config file parameter.
 
     Returns a spark instance.
     '''
+
+    #Get configuration
+    config = configparser.ConfigParser()
+    config.read_file(open(file))
     
-    keys = parse_cfg(profile, file)
+    keys = {"host_url":config.get(profile, 'HOST'), 
+            "token":config.get(profile, 'TOKEN'), 
+            "cluster_id":config.get(profile, 'CLUSTER_ID')}
     
+    #Connect to cluster; if cluster_uid argument was given,
+    # override config file.
     if cluster_uid=="":
         spark = DatabricksSession.builder.remote(
         host       = keys['host_url'], 
@@ -50,4 +39,5 @@ def connect_cluster(profile, file=r'.config', cluster_uid=""):
         cluster_id = cluster_uid
         ).getOrCreate()
 
+    # Return a spark instance
     return spark
