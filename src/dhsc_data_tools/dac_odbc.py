@@ -4,18 +4,17 @@ import pyodbc
 from pypac import pac_context_for_url
 from dhsc_data_tools.keyvault import kvConnection
 
-def connect(environment="prod"):
+def connect(environment: str = "prod"):
 
-    '''
-    This function allows to connect to data within the DAC,
-    and query it using SQL queries.
+    '''Allows to connect to data within the DAC, and query it using SQL queries.
 
-    Accepts an environment argument, which defaults to "prod". 
-    Must be one of "dev", "qa", "test", "prod".
+    Parameters: an environment argument, which defaults to "prod". Must be one of "dev", "qa", "test", "prod".
 
-    Expects TENANT_NAME environment variable.
+    Requires: 
+    TENANT_NAME environment variable. 
+    Simba Spark ODBC Driver is required. Request the latter through IT portal, install through company portal.
 
-    Simba Spark ODBC Driver is required.
+    Returns: connection object.
     '''
 
     print("User warning: Expect two authentication pop-up windows,\nwhich may ask you to authenticate and then \n confirm 'Authentication complete.'")
