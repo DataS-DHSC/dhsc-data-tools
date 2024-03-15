@@ -10,3 +10,4 @@ src/dhsc_data_tools.egg-info/SOURCES.txt
 src/dhsc_data_tools.egg-info/dependency_links.txt
 src/dhsc_data_tools.egg-info/requires.txt
 src/dhsc_data_tools.egg-info/top_level.txt
+tests/tests_unittest.py
