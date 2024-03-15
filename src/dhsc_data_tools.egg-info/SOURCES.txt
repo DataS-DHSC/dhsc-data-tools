@@ -2,7 +2,7 @@ LICENSE
 README.md
 pyproject.toml
 src/dhsc_data_tools/__init__.py
-src/dhsc_data_tools/dataconnect.py
+src/dhsc_data_tools/dac_odbc.py
 src/dhsc_data_tools/keyvault.py
 src/dhsc_data_tools/remote_compute.py
 src/dhsc_data_tools.egg-info/PKG-INFO
