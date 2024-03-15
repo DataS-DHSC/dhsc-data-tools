@@ -20,7 +20,10 @@ class kvConnection:
         
         if environment.upper() in ["DEV", "TEST", "QA", "PROD"]:
             temp_vault_name = os.getenv('KEY_VAULT_NAME')
-            self.vault_name = temp_vault_name.format(env=environment.lower())
+            try:
+                self.vault_name = temp_vault_name.format(env=environment.lower())
+            except AttributeError:
+                raise AttributeError("KEY_VAULT_NAME environment variable not found.")
             if self.vault_name:
                 self.KVUri = f"https://{self.vault_name}.vault.azure.net"
             else:

@@ -17,7 +17,7 @@ def connect(environment: str = "prod"):
     Returns: connection object.
     '''
 
-    print("User warning: Expect two authentication pop-up windows,\nwhich may ask you to authenticate and then \n confirm 'Authentication complete.'")
+    print("\nUser warning: Expect two authentication pop-up windows,\nwhich may ask you to authenticate and then \n confirm 'Authentication complete.'")
     
     # Using Azure CLI app ID
     client_id = "04b07795-8ddb-461a-bbee-02f9e1bf7b46"

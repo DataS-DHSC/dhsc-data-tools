@@ -1,0 +1,8 @@
+test_dac_odbc_connect (tests.tests_unittest.Tests.test_dac_odbc_connect) ... ok
+test_keyvaultconnection (tests.tests_unittest.Tests.test_keyvaultconnection) ... ok
+test_remote_compute_connect_cluster (tests.tests_unittest.Tests.test_remote_compute_connect_cluster) ... ok
+
+----------------------------------------------------------------------
+Ran 3 tests in 61.024s
+
+OK
