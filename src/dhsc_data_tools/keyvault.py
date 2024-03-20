@@ -42,7 +42,7 @@ class kvConnection:
             additionally_allowed_tenants="*",
         )
 
-        self.client = SecretClient(vault_url=self.KVUri, credential=self.credential)
+        self.client = SecretClient(vault_url=self.kv_uri, credential=self.credential)
 
     def get_secret(self, secret_name: str):
         """Returns the *value* of the secret.

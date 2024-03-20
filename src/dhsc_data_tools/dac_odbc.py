@@ -29,9 +29,9 @@ def connect(environment: str = "prod"):
     # Using Azure CLI app ID
     client_id = "04b07795-8ddb-461a-bbee-02f9e1bf7b46"
     try:
-        tenant_name = os.environ["TENANT_NAME"]
+        tenant_name = os.environ["DAC_TENANT"]
     except KeyError as exc:
-        raise KeyError("TENANT_NAME environment variable not found.") from exc
+        raise KeyError("DAC_TENANT environment variable not found.") from exc
 
     # Do not modify this variable. It represents the programmatic ID for
     # Azure Databricks along with the default scope of '/.default'.
