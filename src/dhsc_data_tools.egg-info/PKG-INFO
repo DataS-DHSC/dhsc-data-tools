@@ -42,12 +42,10 @@ Requires-Dist: configparser
 
 # dhsc_data_tools package
 
+**In active development**
+
 The goal of DHSCdatatools is to provide a suite of tools for using data hosted on the DHSC analytical cloud (DAC) platform. 
 [For detailed developer documentation click here.](https://github.com/DataS-DHSC/dhsc-data-tools/tree/main/docs/dhsc_data_tools)
-
-**In development - not ready for use**
-
-This repository contains tools to work with the DAC from local Python installation.
 
 ## Pre-requisites
 
@@ -68,6 +66,9 @@ pip install git+https://github.com/DataS-DHSC/dhsc-data-tools.git
 ## .env and config files
 
 A .env file containing tenant name and key vault name is required for `dhsc_data_tools.dac_odbc.connect()` and `dhsc_data_tools.keyvault.kvConnection()`.
+Please find the .env file in the [Data Science Teams space DAC channel](https://teams.microsoft.com/l/channel/19%3ad94b5e4692d043249285162a04b35d12%40thread.tacv2/DAC%2520(DHSC%2520analytical%2520cloud)?groupId=88d91456-9588-4bed-a713-fde91b11a227&tenantId=61278c30-91a8-4c31-8c1f-ef4de8973a1c).
+
+Both these files should be in your working directory. 
 
 **IMPORTANT**
 
