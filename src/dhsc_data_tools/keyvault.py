@@ -20,9 +20,6 @@ class kvConnection:
 
     Returns: Azure Keyvault Connection object.
     """
-    
-    print("User warning: Expect an authentication pop-up window.")
-    print("You will only be asked to authenticate once the first time.")
 
     def __init__(self, environment: str = "prod"):
 
@@ -63,7 +60,7 @@ class kvConnection:
             self.credential = InteractiveBrowserCredential(
                 client_id="04b07795-8ddb-461a-bbee-02f9e1bf7b46",
                 cache_persistence_options = cache_options,
-                additionally_allowed_tenants=['*']
+                additionally_allowed_tenants="*"
             )
             token = self.credential.get_token(scope) 
 
@@ -79,4 +76,8 @@ class kvConnection:
         User might have to set HTTP/HTTPS proxy as PAC context explicitly
         before running kvconnection.get_secret().
         """
+
+        print("User warning: Expect an authentication pop-up window.")
+        print("You will only be asked to authenticate once the first time.")
+
         return self.client.get_secret(secret_name).value
