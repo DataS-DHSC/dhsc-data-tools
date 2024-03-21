@@ -77,7 +77,6 @@ class kvConnection:
         before running kvconnection.get_secret().
         """
 
-        print("User warning: Expect an authentication pop-up window.")
-        print("You will only be asked to authenticate once the first time.")
+        print("Getting the secret. You will only be asked to authenticate once the first time.")
 
         return self.client.get_secret(secret_name).value
