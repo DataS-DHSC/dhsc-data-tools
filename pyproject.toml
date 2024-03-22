@@ -1,13 +1,13 @@
 [project]
 name = "dhsc_data_tools"
-version = "0.0.1"
+version = "0.0.2"
 authors = [
   { name="Data Science Hub", email="datascience@dhsc.gov.uk" },
 ]
 description = "An internal Python package to facilitate working with the DAC"
 readme = "README.md"
 license = {file = "LICENSE"}
-requires-python = ">=3.8"
+requires-python = ">=3.4"
 classifiers = [
     "Programming Language :: Python :: 3",
     "License :: OSI Approved :: MIT License",
@@ -16,10 +16,10 @@ classifiers = [
 dependencies = [
   "pyodbc",
   "pypac",
+  "pyyaml",
   "azure-identity",
   "azure-keyvault-secrets",
   "databricks-connect",
-  "configparser",
 ]
 
 [project.urls]

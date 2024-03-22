@@ -1,11 +1,11 @@
 """Module allows to run code on Azure Databricks clusters."""
 
-import configparser
+import yaml
 from databricks.connect import DatabricksSession
 
 
 def connect_cluster(
-    profile: str = "DEFAULT", file: str = r".config", cluster_uid: str = ""
+    profile: str = "DEFAULT", file: str = r"config_yaml", cluster_uid: str = None
 ):
     """Establishes a connection with a databricks compute cluster.
 
@@ -27,24 +27,22 @@ def connect_cluster(
     """
 
     # Get configuration
-    config = configparser.ConfigParser()
-    config.read(file, encoding="utf8")
-
-    keys = {
-        "host_url": config.get(profile, "HOST"),
-        "token": config.get(profile, "TOKEN"),
-        "cluster_id": config.get(profile, "CLUSTER_ID"),
-    }
+    with open(file, "r") as file:
+        cfg = yaml.safe_load(file)
 
     # Connect to cluster; if cluster_uid argument was given,
     # override config file.
-    if cluster_uid == "":
+    if cluster_uid:
         spark = DatabricksSession.builder.remote(
-            host=keys["host_url"], token=keys["token"], cluster_id=keys["cluster_id"]
+            host=cfg[profile]["host"],
+            token=cfg[profile]["token"],
+            cluster_id=cluster_uid,
         ).getOrCreate()
     else:
         spark = DatabricksSession.builder.remote(
-            host=keys["host_url"], token=keys["token"], cluster_id=cluster_uid
+            host=cfg[profile]["host"],
+            token=cfg[profile]["token"],
+            cluster_id=cfg[profile]["cluster_id"],
         ).getOrCreate()
 
     # Return a spark instance

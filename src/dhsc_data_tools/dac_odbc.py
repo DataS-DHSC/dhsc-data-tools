@@ -1,13 +1,13 @@
 """Module dac_odbc allows to interact with DAC SQL endpoints."""
 
 import os
-import atexit
 import pyodbc
 import datetime as dt
 from pypac import pac_context_for_url
 from msal import PublicClientApplication
 from msal import SerializableTokenCache
 from dhsc_data_tools.keyvault import kvConnection
+
 
 def connect(environment: str = "prod"):
     """Allows to connect to data within the DAC, and query it using SQL queries.
@@ -23,15 +23,15 @@ def connect(environment: str = "prod"):
     Returns: connection object.
     """
 
-    print("User warning: Expect two authentication pop-up windows.")
+    print("User warning: Expect authentication pop-up windows.")
     print("You will only be asked to authenticate at the first run.")
-    
-    #Define home path
-    user_home = os.path.expanduser('~')
+
+    # Define home path
+    user_home = os.path.expanduser("~")
 
     # Using Azure CLI app ID
     client_id = "04b07795-8ddb-461a-bbee-02f9e1bf7b46"
-    
+
     # Find DAC_TENANT (tenant name) environment var
     tenant_name = os.getenv("DAC_TENANT")
     if tenant_name:
@@ -57,9 +57,9 @@ def connect(environment: str = "prod"):
     app = PublicClientApplication(
         client_id=client_id,
         authority="https://login.microsoftonline.com/" + tenant_name,
-        token_cache = cache
+        token_cache=cache,
     )
-    
+
     # Get accounts for .acquire_token_silent method
     accounts = app.get_accounts()
 
@@ -102,7 +102,7 @@ def connect(environment: str = "prod"):
         + f"Host={host_name};"  # from keyvaults
         + "Port=443;"
         + f"HTTPPath={ep_path};"  # from keyvaults
-        + "SSL=1;"  
+        + "SSL=1;"
         + "ThriftTransport=2;"
         + "AuthMech=11;"
         + "Auth_Flow=0;"
