@@ -5,7 +5,7 @@ from azure.keyvault.secrets import SecretClient
 from azure.identity import InteractiveBrowserCredential
 from azure.identity import TokenCachePersistenceOptions
 from azure.identity import SharedTokenCacheCredential
-
+from azure.identity._exceptions import CredentialUnavailableError
 
 class kvConnection:
     """
@@ -56,13 +56,13 @@ class kvConnection:
         try:
             self.credential = SharedTokenCacheCredential(cache_persistence_options=cache_options)
             token = self.credential.get_token(scope)
-        except Exception as e:   
+        except CredentialUnavailableError:
             self.credential = InteractiveBrowserCredential(
                 client_id="04b07795-8ddb-461a-bbee-02f9e1bf7b46",
                 cache_persistence_options = cache_options,
                 additionally_allowed_tenants="*"
             )
-            token = self.credential.get_token(scope) 
+            token = self.credential.get_token(scope)
 
         self.client = SecretClient(vault_url=self.kv_uri, credential=self.credential)
 
