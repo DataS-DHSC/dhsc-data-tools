@@ -23,9 +23,7 @@ def connect(environment: str = "prod"):
     """
 
     print("User warning: Expect two authentication pop-up windows.")
-    print(
-        "These may ask you to authenticate and then confirm 'Authentication complete.'"
-    )
+    print("You will only be asked to authenticate at the first run.")
     
     #Define home path
     user_home = os.path.expanduser('~')
@@ -46,10 +44,13 @@ def connect(environment: str = "prod"):
 
     # Define cache
     cache = SerializableTokenCache()
-    cache_path = f"{user_home}\\my_cache.bin"
+    cache_path = f"{user_home}\\msal.cache"
 
     if os.path.exists(cache_path):
-        cache.deserialize(open(cache_path, "r").read())
+        with open(cache_path, "r") as reader:
+            cache.deserialize(reader.read())
+    else:
+        print("No auth cache found.")
     
     # atexit.register(lambda:
     #     open(cache_path, "w").write(cache.serialize())
@@ -82,7 +83,8 @@ def connect(environment: str = "prod"):
             token = app.acquire_token_interactive(scopes=scope)
 
     if cache.has_state_changed:
-        open(cache_path, "w").write(cache.serialize())
+        with open(cache_path, "w") as writer:
+            writer.write(cache.serialize())
 
     # establish keyvault connection
     kvc = kvConnection(environment)
