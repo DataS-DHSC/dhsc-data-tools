@@ -5,7 +5,7 @@ from databricks.connect import DatabricksSession
 
 
 def connect_cluster(
-    profile: str = "DEFAULT", file: str = r"config_yaml", cluster_uid: str = None
+    profile: str = "DEFAULT", file: str = r"config_yaml", cluster_uid: str | None = None
 ):
     """Establishes a connection with a databricks compute cluster.
 
