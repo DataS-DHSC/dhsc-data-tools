@@ -63,6 +63,10 @@ def connect(environment: str = "prod"):
     # Get accounts for .acquire_token_silent method
     accounts = app.get_accounts()
 
+    def get_new_token():
+        with pac_context_for_url("https://login.microsoftonline.com"):
+            return app.acquire_token_interactive(scopes=scope)
+
     if accounts:
         if len(accounts) == 1:
             # acquire cached token
@@ -72,19 +76,20 @@ def connect(environment: str = "prod"):
                 expiry = token["expires_in"]
                 # check token expiry date
                 if expiry <= 10:
+                    # if expires within 10 seconds
                     # acquire new token
-                    with pac_context_for_url("https://www.google.co.uk/"):
-                        token = app.acquire_token_interactive(scopes=scope)
+                    token = get_new_token()
+            else:
+                #acquire new token
+                token = get_new_token()
         else:
-            for i in accounts:
-                app.remove_account(i)
+            for account_n in accounts:
+                app.remove_account(account_n)
             # acquire new token
-            with pac_context_for_url("https://www.google.co.uk/"):
-                token = app.acquire_token_interactive(scopes=scope)
+            token = get_new_token()
     else:
         # acquire new token
-        with pac_context_for_url("https://www.google.co.uk/"):
-            token = app.acquire_token_interactive(scopes=scope)
+        token = get_new_token()
 
     if cache.has_state_changed:
         with open(cache_path, "w") as writer:
