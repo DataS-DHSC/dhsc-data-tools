@@ -10,18 +10,22 @@ def connect_cluster(
     """Establishes a connection with a databricks compute cluster.
 
     Requires:
-    It relies on a `.config` file in the working directory, containing:
-    [<profile-name>]
-    HOST=xxx
-    TOKEN=xxx
-    CLUSTER_ID=xxx
+    It relies on a yaml configuration file in the working directory,
+    which by default reads `config.yaml`, containing profile entries
+    such as:
+    
+    your-profile-name:
+        host=xxx
+        token=xxx
+        cluster_id=xxx
 
     NB: You can also pass a cluster_id parameter manually,
         which will override the config file parameter.
 
     Parameters:
     profile (config profile name defaults to "DEFAULT"),
-    file ()
+    file (the config file's name, you can pass a file path also),
+    cluster_uid (optional).
 
     Returns: a spark instance.
     """
