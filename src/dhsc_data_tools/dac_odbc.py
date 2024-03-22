@@ -3,6 +3,7 @@
 import os
 import atexit
 import pyodbc
+import datetime as dt
 from pypac import pac_context_for_url
 from msal import PublicClientApplication
 from msal import SerializableTokenCache
@@ -51,12 +52,6 @@ def connect(environment: str = "prod"):
             cache.deserialize(reader.read())
     else:
         print("No auth cache found.")
-    
-    # atexit.register(lambda:
-    #     open(cache_path, "w").write(cache.serialize())
-    #     # Hint: The following optional line persists only when state changed
-    #     if cache.has_state_changed else None
-    #     )
 
     # Create client
     app = PublicClientApplication(
@@ -70,15 +65,22 @@ def connect(environment: str = "prod"):
 
     if accounts:
         if len(accounts) == 1:
+            # acquire cached token
             token = app.acquire_token_silent(scopes=scope, account=accounts[0])
+            # check token expiry date
+            expiry = token["expires_in"]
+            if expiry <= 10:
+                # acquire new token
+                with pac_context_for_url("https://www.google.co.uk/"):
+                    token = app.acquire_token_interactive(scopes=scope)
         else:
             for i in accounts:
                 app.remove_account(i)
-            # acquire token
+            # acquire new token
             with pac_context_for_url("https://www.google.co.uk/"):
                 token = app.acquire_token_interactive(scopes=scope)
     else:
-        # acquire token
+        # acquire new token
         with pac_context_for_url("https://www.google.co.uk/"):
             token = app.acquire_token_interactive(scopes=scope)
 
