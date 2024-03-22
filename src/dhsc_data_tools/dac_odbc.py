@@ -67,12 +67,14 @@ def connect(environment: str = "prod"):
         if len(accounts) == 1:
             # acquire cached token
             token = app.acquire_token_silent(scopes=scope, account=accounts[0])
-            # check token expiry date
-            expiry = token["expires_in"]
-            if expiry <= 10:
-                # acquire new token
-                with pac_context_for_url("https://www.google.co.uk/"):
-                    token = app.acquire_token_interactive(scopes=scope)
+            # check token is not NoneType due to expiry
+            if token:
+                expiry = token["expires_in"]
+                # check token expiry date
+                if expiry <= 10:
+                    # acquire new token
+                    with pac_context_for_url("https://www.google.co.uk/"):
+                        token = app.acquire_token_interactive(scopes=scope)
         else:
             for i in accounts:
                 app.remove_account(i)
