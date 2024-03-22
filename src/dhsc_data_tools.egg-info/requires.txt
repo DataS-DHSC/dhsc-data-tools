@@ -1,6 +1,6 @@
 pyodbc
 pypac
+pyyaml
 azure-identity
 azure-keyvault-secrets
 databricks-connect
-configparser

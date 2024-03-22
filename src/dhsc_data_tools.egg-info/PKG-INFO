@@ -1,6 +1,6 @@
 Metadata-Version: 2.1
 Name: dhsc_data_tools
-Version: 0.0.1
+Version: 0.0.2
 Summary: An internal Python package to facilitate working with the DAC
 Author-email: Data Science Hub <datascience@dhsc.gov.uk>
 License: MIT License
@@ -35,10 +35,10 @@ Description-Content-Type: text/markdown
 License-File: LICENSE
 Requires-Dist: pyodbc
 Requires-Dist: pypac
+Requires-Dist: pyyaml
 Requires-Dist: azure-identity
 Requires-Dist: azure-keyvault-secrets
 Requires-Dist: databricks-connect
-Requires-Dist: configparser
 
 # dhsc_data_tools package
 
