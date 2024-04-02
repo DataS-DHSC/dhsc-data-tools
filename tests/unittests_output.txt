@@ -1,3 +1,23 @@
+
+02-04-2024
+
+User warning: Expect an authentication pop-up window.
+You will only be asked to authenticate on the first run.
+Creating a user data folder and storing credentials in it...
+Creating a user data folder and storing credentials in it...
+Getting secret...
+Getting secret...
+.Creating a user data folder and storing credentials in it...
+Getting secret...
+..
+----------------------------------------------------------------------
+Ran 3 tests in 20.119s
+
+OK
+
+
+March 2024
+
 test_dac_odbc_connect (tests.tests_unittest.Tests.test_dac_odbc_connect) ... ok
 test_keyvaultconnection (tests.tests_unittest.Tests.test_keyvaultconnection) ... ok
 test_remote_compute_connect_cluster (tests.tests_unittest.Tests.test_remote_compute_connect_cluster) ... ok
