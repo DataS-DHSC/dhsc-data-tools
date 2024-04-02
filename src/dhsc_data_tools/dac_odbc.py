@@ -1,13 +1,8 @@
 """Module dac_odbc allows to interact with DAC SQL endpoints."""
 
 import os
-import hashlib
-import json
 import pyodbc
-from pathlib import Path
-import platformdirs
-from azure.identity import AuthenticationRecord, InteractiveBrowserCredential, TokenCachePersistenceOptions
-from azure.keyvault.secrets import SecretClient
+from azure.identity import InteractiveBrowserCredential, TokenCachePersistenceOptions
 from pypac import pac_context_for_url
 from dhsc_data_tools.keyvault import kvConnection
 from dhsc_data_tools import auth_utils
