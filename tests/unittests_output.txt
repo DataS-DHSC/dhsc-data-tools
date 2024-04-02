@@ -1,3 +1,14 @@
+User warning: Expect an authentication pop-up window.
+You will only be asked to authenticate on the first run.
+Getting secret...
+Getting secret...
+.Getting secret...
+..
+----------------------------------------------------------------------
+Ran 3 tests in 23.251s
+
+OK
+
 
 02-04-2024
 
