@@ -13,7 +13,7 @@ def connect_cluster(
     It relies on a yaml configuration file in the working directory,
     which by default reads `config.yaml`, containing profile entries
     such as:
-    
+
     your-profile-name:
         host=xxx
         token=xxx
@@ -31,8 +31,8 @@ def connect_cluster(
     """
 
     # Get configuration
-    with open(file, "r") as file:
-        cfg = yaml.safe_load(file)
+    with open(file, mode="r", encoding="utf-8") as infile:
+        cfg = yaml.safe_load(infile)
 
     # Connect to cluster; if cluster_uid argument was given,
     # override config file.

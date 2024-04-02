@@ -2,7 +2,7 @@
 
 import os
 import pyodbc
-from azure.identity import InteractiveBrowserCredential, TokenCachePersistenceOptions
+from azure.identity import TokenCachePersistenceOptions
 from pypac import pac_context_for_url
 from dhsc_data_tools.keyvault import kvConnection
 from dhsc_data_tools import auth_utils
@@ -40,17 +40,18 @@ def connect(environment: str = "prod"):
     # Using Azure CLI app ID
     client_id = "04b07795-8ddb-461a-bbee-02f9e1bf7b46"
 
+    # Define cache options for credential object
+    cache_options = TokenCachePersistenceOptions()
+
     # Authentication process, attempts cached authentication first
     authentication_record_path = auth_utils.get_authentication_record_path(
-        authority="login.microsoftonline.com",
-        clientId=client_id,
-        tenantId=tenant_id
+        authority="login.microsoftonline.com", clientId=client_id, tenantId=tenant_id
     )
 
     authentication_record = auth_utils.read_authentication_record(
         authentication_record_path
-        )
-    
+    )
+
     # Set HTTP/HTTPS proxy explicitly as PAC context
     with pac_context_for_url("https://www.google.co.uk/"):
         http_proxy = os.environ["HTTP_PROXY"]
@@ -60,20 +61,14 @@ def connect(environment: str = "prod"):
     os.environ["HTTPS_PROXY"] = https_proxy
 
     # Define Azure Identity Credential
-    credential = InteractiveBrowserCredential(
-        client_id=client_id,
-        cache_persistence_options=TokenCachePersistenceOptions(),
-        additionally_allowed_tenants = ["*"],
-        tenant_id = tenant_id,
-        authentication_record=authentication_record
+    credential = auth_utils.return_credential(
+        client_id, tenant_id, cache_options, authentication_record
     )
 
     # if there is no cached auth record, reauthenticate
-    if authentication_record is None:
-        auth_utils.write_authentication_record(
-            authentication_record_path, 
-            credential.authenticate(scopes=[scope])
-        )
+    auth_utils.check_auth_record(
+        credential, authentication_record, authentication_record_path, scope
+    )
 
     # Get token
     token = credential.get_token(scope)
@@ -96,7 +91,7 @@ def connect(environment: str = "prod"):
         + "ThriftTransport=2;"
         + "AuthMech=11;"
         + "Auth_Flow=0;"
-        + f"Auth_AccessToken={token.token}", # from azure identity credential
+        + f"Auth_AccessToken={token.token}",  # from azure identity credential
         autocommit=True,
     )
 

@@ -2,7 +2,6 @@
 
 import os
 from azure.keyvault.secrets import SecretClient
-from azure.identity import InteractiveBrowserCredential
 from azure.identity import TokenCachePersistenceOptions
 from dhsc_data_tools import auth_utils
 
@@ -22,7 +21,6 @@ class kvConnection:
     """
 
     def __init__(self, environment: str = "prod"):
-
         # Check issues with the env name parameter input by user
         if environment.upper() in ["DEV", "TEST", "QA", "PROD"]:
             temp_vault_name = os.getenv("KEY_VAULT_NAME")
@@ -55,30 +53,29 @@ class kvConnection:
         if tenant_id is None:
             raise KeyError("DAC_TENANT environment variable not found.")
 
+        # Define cache options for credential object
+        cache_options = TokenCachePersistenceOptions()
+
         # Authentication process, attempts cached authentication first
         authentication_record_path = auth_utils.get_authentication_record_path(
             authority="login.microsoftonline.com",
             clientId=client_id,
-            tenantId=tenant_id
+            tenantId=tenant_id,
         )
 
-        authentication_record = auth_utils.read_authentication_record(authentication_record_path)
+        authentication_record = auth_utils.read_authentication_record(
+            authentication_record_path
+        )
 
         # Define Azure Identity Credential
-        self.credential = InteractiveBrowserCredential(
-            client_id=client_id,
-            cache_persistence_options=TokenCachePersistenceOptions(),
-            additionally_allowed_tenants = ["*"],
-            tenant_id = tenant_id,
-            authentication_record=authentication_record
+        self.credential = auth_utils.return_credential(
+            client_id, tenant_id, cache_options, authentication_record
         )
 
         # if there is no cached auth record, reauthenticate
-        if authentication_record is None:
-            auth_utils.write_authentication_record(
-                authentication_record_path, 
-                self.credential.authenticate(scopes=[scope])
-            )
+        auth_utils.check_auth_record(
+            self.credential, authentication_record, authentication_record_path, scope
+        )
 
         # InteractiveBrowserCredential and AuthenticationRecord
         # lazy load, here they are forced to run, although the
