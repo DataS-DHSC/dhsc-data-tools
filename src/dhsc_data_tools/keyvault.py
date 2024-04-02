@@ -4,8 +4,7 @@ import os
 from azure.keyvault.secrets import SecretClient
 from azure.identity import InteractiveBrowserCredential
 from azure.identity import TokenCachePersistenceOptions
-from azure.identity import SharedTokenCacheCredential
-from azure.identity._exceptions import CredentialUnavailableError
+from dhsc_data_tools import auth_utils
 
 
 class kvConnection:
@@ -14,15 +13,17 @@ class kvConnection:
 
     Parameters:
     Takes an environment name parameter, which must be one of
-    "dev", "test", "qa", "prod". Defaults to "prod". (Not case sensitive.)
+    "dev", "test", "qa" or "prod". Defaults to "prod". (Not case sensitive.)
     It will look for a corresponding key vault name in environment variables.
 
-    Requires: KEY_VAULT_NAME environment variable.
+    Requires: KEY_VAULT_NAME and DAC_TENANT environment variables.
 
     Returns: Azure Keyvault Connection object.
     """
 
     def __init__(self, environment: str = "prod"):
+
+        # Check issues with the env name parameter input by user
         if environment.upper() in ["DEV", "TEST", "QA", "PROD"]:
             temp_vault_name = os.getenv("KEY_VAULT_NAME")
             if temp_vault_name:
@@ -35,33 +36,56 @@ class kvConnection:
             else:
                 raise KeyError("KEY_VAULT_NAME environment variable not found.")
         else:
-            raise ValueError(
+            raise KeyError(
                 "Environment name argument must be one of 'dev', 'test', 'qa', 'prod'."
             )
 
-        # Do not change the value of the scope parameter. It represents the programmatic ID
-        # for Azure Databricks (2ff814a6-3304-4ab8-85cb-cd0e6f879c1d) along with the default
-        # scope (/.default, URL-encoded as %2f.default).
+        # Do not change the value of the scope parameter.
+        # It represents the programmatic ID for Azure Databricks
+        # (2ff814a6-3304-4ab8-85cb-cd0e6f879c1d) along with the
+        # default scope (/.default, URL-encoded as %2f.default).
         scope = "2ff814a6-3304-4ab8-85cb-cd0e6f879c1d/.default"
 
-        # Do not add/modify `allow_unencrypted_storage` parameter,
-        # this defaults to False as intended.
-        cache_options = TokenCachePersistenceOptions()
+        # Fixed
+        client_id = "04b07795-8ddb-461a-bbee-02f9e1bf7b46"
 
-        # Establish client
-        try:
-            self.credential = SharedTokenCacheCredential(
-                cache_persistence_options=cache_options
-            )
-            token = self.credential.get_token(scope)
-        except CredentialUnavailableError:
-            self.credential = InteractiveBrowserCredential(
-                client_id="04b07795-8ddb-461a-bbee-02f9e1bf7b46",
-                cache_persistence_options=cache_options,
-                additionally_allowed_tenants="*",
-            )
-            token = self.credential.get_token(scope)
+        # Find DAC_TENANT (tenant name) environment var
+        # to define tenant_id
+        tenant_id = os.getenv("DAC_TENANT")
+        if tenant_id is None:
+            raise KeyError("DAC_TENANT environment variable not found.")
 
+        # Authentication process, attempts cached authentication first
+        authentication_record_path = auth_utils.get_authentication_record_path(
+            authority="login.microsoftonline.com",
+            clientId=client_id,
+            tenantId=tenant_id
+        )
+
+        authentication_record = auth_utils.read_authentication_record(authentication_record_path)
+
+        # Define Azure Identity Credential
+        self.credential = InteractiveBrowserCredential(
+            client_id=client_id,
+            cache_persistence_options=TokenCachePersistenceOptions(),
+            additionally_allowed_tenants = ["*"],
+            tenant_id = tenant_id,
+            authentication_record=authentication_record
+        )
+
+        # if there is no cached auth record, reauthenticate
+        if authentication_record is None:
+            auth_utils.write_authentication_record(
+                authentication_record_path, 
+                self.credential.authenticate(scopes=[scope])
+            )
+
+        # InteractiveBrowserCredential and AuthenticationRecord
+        # lazy load, here they are forced to run, although the
+        # token will not be used by the code further.
+        token = self.credential.get_token(scope)
+
+        # Establish Azure Keyvault SecretClient
         self.client = SecretClient(vault_url=self.kv_uri, credential=self.credential)
 
     def get_secret(self, secret_name: str):

@@ -1,99 +1,87 @@
 """Module dac_odbc allows to interact with DAC SQL endpoints."""
 
 import os
+import hashlib
+import json
 import pyodbc
-import datetime as dt
+from pathlib import Path
+import platformdirs
+from azure.identity import AuthenticationRecord, InteractiveBrowserCredential, TokenCachePersistenceOptions
+from azure.keyvault.secrets import SecretClient
 from pypac import pac_context_for_url
-from msal import PublicClientApplication
-from msal import SerializableTokenCache
 from dhsc_data_tools.keyvault import kvConnection
+from dhsc_data_tools import auth_utils
 
 
 def connect(environment: str = "prod"):
     """Allows to connect to data within the DAC, and query it using SQL queries.
 
     Parameters: an environment argument, which defaults to "prod".
-    Must be one of "dev", "qa", "test", "prod".
+    Must be one of "dev", "qa", "test" or "prod".
 
     Requires:
-    TENANT_NAME environment variable.
+    KEY_VAULT_NAME and DAC_TENANT environment variables.
     Simba Spark ODBC Driver is required.
     Request the latter through IT portal, install through company portal.
 
     Returns: connection object.
     """
 
-    print("User warning: Expect authentication pop-up windows.")
-    print("You will only be asked to authenticate at the first run.")
+    print("User warning: Expect an authentication pop-up window.")
+    print("You will only be asked to authenticate on the first run.")
 
-    # Define home path
-    user_home = os.path.expanduser("~")
+    # Find DAC_TENANT (tenant name) environment var
+    # to define tenant_id
+    tenant_id = os.getenv("DAC_TENANT")
+    if tenant_id is None:
+        raise KeyError("DAC_TENANT environment variable not found.")
+
+    # Do not change the value of the scope parameter.
+    # It represents the programmatic ID for Azure Databricks
+    # (2ff814a6-3304-4ab8-85cb-cd0e6f879c1d) along with the
+    # default scope (/.default, URL-encoded as %2f.default).
+    scope = "2ff814a6-3304-4ab8-85cb-cd0e6f879c1d/.default"
 
     # Using Azure CLI app ID
     client_id = "04b07795-8ddb-461a-bbee-02f9e1bf7b46"
 
-    # Find DAC_TENANT (tenant name) environment var
-    tenant_name = os.getenv("DAC_TENANT")
-    if tenant_name:
-        pass
-    else:
-        raise KeyError("DAC_TENANT environment variable not found.")
-
-    # Do not modify this variable. It represents the programmatic ID for
-    # Azure Databricks along with the default scope of '/.default'.
-    scope = ["2ff814a6-3304-4ab8-85cb-cd0e6f879c1d/.default"]
-
-    # Define cache
-    cache = SerializableTokenCache()
-    cache_path = f"{user_home}\\msal.cache"
-
-    if os.path.exists(cache_path):
-        with open(cache_path, "r") as reader:
-            cache.deserialize(reader.read())
-    else:
-        print("No auth cache found.")
-
-    # Create client
-    app = PublicClientApplication(
-        client_id=client_id,
-        authority="https://login.microsoftonline.com/" + tenant_name,
-        token_cache=cache,
+    # Authentication process, attempts cached authentication first
+    authentication_record_path = auth_utils.get_authentication_record_path(
+        authority="login.microsoftonline.com",
+        clientId=client_id,
+        tenantId=tenant_id
     )
 
-    # Get accounts for .acquire_token_silent method
-    accounts = app.get_accounts()
+    authentication_record = auth_utils.read_authentication_record(
+        authentication_record_path
+        )
+    
+    # Set HTTP/HTTPS proxy explicitly as PAC context
+    with pac_context_for_url("https://www.google.co.uk/"):
+        http_proxy = os.environ["HTTP_PROXY"]
+        https_proxy = os.environ["HTTPS_PROXY"]
 
-    def get_new_token():
-        with pac_context_for_url("https://login.microsoftonline.com"):
-            return app.acquire_token_interactive(scopes=scope)
+    os.environ["HTTP_PROXY"] = http_proxy
+    os.environ["HTTPS_PROXY"] = https_proxy
 
-    if accounts:
-        if len(accounts) == 1:
-            # acquire cached token
-            token = app.acquire_token_silent(scopes=scope, account=accounts[0])
-            # check token is not NoneType due to expiry
-            if token:
-                expiry = token["expires_in"]
-                # check token expiry date
-                if expiry <= 10:
-                    # if expires within 10 seconds
-                    # acquire new token
-                    token = get_new_token()
-            else:
-                #acquire new token
-                token = get_new_token()
-        else:
-            for account_n in accounts:
-                app.remove_account(account_n)
-            # acquire new token
-            token = get_new_token()
-    else:
-        # acquire new token
-        token = get_new_token()
+    # Define Azure Identity Credential
+    credential = InteractiveBrowserCredential(
+        client_id=client_id,
+        cache_persistence_options=TokenCachePersistenceOptions(),
+        additionally_allowed_tenants = ["*"],
+        tenant_id = tenant_id,
+        authentication_record=authentication_record
+    )
 
-    if cache.has_state_changed:
-        with open(cache_path, "w") as writer:
-            writer.write(cache.serialize())
+    # if there is no cached auth record, reauthenticate
+    if authentication_record is None:
+        auth_utils.write_authentication_record(
+            authentication_record_path, 
+            credential.authenticate(scopes=[scope])
+        )
+
+    # Get token
+    token = credential.get_token(scope)
 
     # establish keyvault connection
     kvc = kvConnection(environment)
@@ -103,7 +91,7 @@ def connect(environment: str = "prod"):
         host_name = kvc.get_secret("dac-db-host")
         ep_path = kvc.get_secret("dac-sql-endpoint-http-path")
 
-    # establish connection
+    # establish connection and return object
     conn = pyodbc.connect(
         "Driver=Simba Spark ODBC Driver;"
         + f"Host={host_name};"  # from keyvaults
@@ -113,7 +101,7 @@ def connect(environment: str = "prod"):
         + "ThriftTransport=2;"
         + "AuthMech=11;"
         + "Auth_Flow=0;"
-        + f"Auth_AccessToken={token['access_token']}",  # from MSAL
+        + f"Auth_AccessToken={token.token}", # from azure identity credential
         autocommit=True,
     )
 

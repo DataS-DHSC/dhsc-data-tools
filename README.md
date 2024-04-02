@@ -26,11 +26,11 @@ pip install git+https://github.com/DataS-DHSC/dhsc-data-tools.git
 A .env file containing tenant name and key vault name is required for `dhsc_data_tools.dac_odbc.connect()` and `dhsc_data_tools.keyvault.kvConnection()`.
 Please find the .env file in the [Data Science Teams space DAC channel](https://teams.microsoft.com/l/channel/19%3ad94b5e4692d043249285162a04b35d12%40thread.tacv2/DAC%2520(DHSC%2520analytical%2520cloud)?groupId=88d91456-9588-4bed-a713-fde91b11a227&tenantId=61278c30-91a8-4c31-8c1f-ef4de8973a1c).
 
-Both these files should be in your working directory. 
+Place this file in your working directory. 
 
 **IMPORTANT**
 
-**Ensure in each project your `.gitignore` file excludes `.env` and `.config` files.**
+**Ensure in each project your `.gitignore` file excludes config, `.env`, and relevant yaml files.**
 If you do accidentally commit these files (or any other sensitive data) please get in touch with the [Data Science Hub](mailto:datascience@dhsc.gov.uk) to discuss how best to mitigate the breach.
 
 ## Example use scripts
@@ -52,6 +52,10 @@ cursor.execute("SELECT * FROM samples.nyctaxi.trips LIMIT 10")
 # Print the rows retrieved from the query.
 for row in cursor.fetchall():
     print(row)
+
+# For help, you can run
+help(dac_odbc.connect) # or with any other module
+
 ```
 
 ## Code of Conduct
