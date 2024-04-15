@@ -2,10 +2,10 @@
 
 import os
 import pyodbc
-from azure.identity import TokenCachePersistenceOptions
 from pypac import pac_context_for_url
 from dhsc_data_tools.keyvault import kvConnection
-from dhsc_data_tools import auth_utils
+from dhsc_data_tools import _ddt_utils
+from dhsc_data_tools import _constants
 
 
 def connect(environment: str = "prod"):
@@ -22,62 +22,20 @@ def connect(environment: str = "prod"):
     Returns: connection object.
     """
 
-    print("User warning: Expect an authentication pop-up window.")
-    print("You will only be asked to authenticate on the first run.")
-
     # Find DAC_TENANT (tenant name) environment var
     # to define tenant_id
-    tenant_id = os.getenv("DAC_TENANT")
-    if tenant_id is None:
-        raise KeyError("DAC_TENANT environment variable not found.")
-
-    # Do not change the value of the scope parameter.
-    # It represents the programmatic ID for Azure Databricks
-    # (2ff814a6-3304-4ab8-85cb-cd0e6f879c1d) along with the
-    # default scope (/.default, URL-encoded as %2f.default).
-    scope = "2ff814a6-3304-4ab8-85cb-cd0e6f879c1d/.default"
-
-    # Using Azure CLI app ID
-    client_id = "04b07795-8ddb-461a-bbee-02f9e1bf7b46"
-
-    # Define cache options for credential object
-    cache_options = TokenCachePersistenceOptions()
-
-    # Authentication process, attempts cached authentication first
-    authentication_record_path = auth_utils.get_authentication_record_path(
-        authority="login.microsoftonline.com", clientId=client_id, tenantId=tenant_id
-    )
-
-    authentication_record = auth_utils.read_authentication_record(
-        authentication_record_path
-    )
-
-    # Set HTTP/HTTPS proxy explicitly as PAC context
-    with pac_context_for_url("https://www.google.co.uk/"):
-        http_proxy = os.environ["HTTP_PROXY"]
-        https_proxy = os.environ["HTTPS_PROXY"]
-
-    os.environ["HTTP_PROXY"] = http_proxy
-    os.environ["HTTPS_PROXY"] = https_proxy
-
-    # Define Azure Identity Credential
-    credential = auth_utils.return_credential(
-        client_id, tenant_id, cache_options, authentication_record
-    )
-
-    # if there is no cached auth record, reauthenticate
-    auth_utils.check_auth_record(
-        credential, authentication_record, authentication_record_path, scope
-    )
-
-    # Get token
-    token = credential.get_token(scope)
+    tenant_id = _ddt_utils._return_tenant_id()
 
     # establish keyvault connection
     kvc = kvConnection(environment)
 
-    # retrieve relevant key vault secrets
+    # Set PAC context
     with pac_context_for_url(kvc.kv_uri):
+        # Define Azure Identity Credential
+        credential = _ddt_utils.return_credential(tenant_id)
+        # Get token
+        token = credential.get_token(_constants._scope)
+        # retrieve relevant key vault secrets
         host_name = kvc.get_secret("dac-db-host")
         ep_path = kvc.get_secret("dac-sql-endpoint-http-path")
 
