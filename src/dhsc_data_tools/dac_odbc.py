@@ -1,10 +1,9 @@
 """Module dac_odbc allows to interact with DAC SQL endpoints."""
 
-import os
 import pyodbc
 from pypac import pac_context_for_url
-from dhsc_data_tools.keyvault import kvConnection
-from dhsc_data_tools import _ddt_utils
+from dhsc_data_tools.keyvault import KVConnection
+from dhsc_data_tools import _utils
 from dhsc_data_tools import _constants
 
 
@@ -22,17 +21,15 @@ def connect(environment: str = "prod"):
     Returns: connection object.
     """
 
-    # Find DAC_TENANT (tenant name) environment var
-    # to define tenant_id
-    tenant_id = _ddt_utils._return_tenant_id()
-
     # establish keyvault connection
-    kvc = kvConnection(environment)
+    kvc = KVConnection(environment)
 
     # Set PAC context
     with pac_context_for_url(kvc.kv_uri):
         # Define Azure Identity Credential
-        credential = _ddt_utils.return_credential(tenant_id)
+        credential = _utils.return_credential(
+            _utils._return_tenant_id()
+            )
         # Get token
         token = credential.get_token(_constants._scope)
         # retrieve relevant key vault secrets
