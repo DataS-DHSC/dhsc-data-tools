@@ -1,6 +1,6 @@
 Metadata-Version: 2.1
 Name: dhsc_data_tools
-Version: 0.0.2
+Version: 1.0.0
 Summary: An internal Python package to facilitate working with the DAC
 Author-email: Data Science Hub <datascience@dhsc.gov.uk>
 License: MIT License

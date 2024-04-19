@@ -2,7 +2,8 @@ LICENSE
 README.md
 pyproject.toml
 src/dhsc_data_tools/__init__.py
-src/dhsc_data_tools/auth_utils.py
+src/dhsc_data_tools/_constants.py
+src/dhsc_data_tools/_utils.py
 src/dhsc_data_tools/dac_odbc.py
 src/dhsc_data_tools/keyvault.py
 src/dhsc_data_tools/remote_compute.py
