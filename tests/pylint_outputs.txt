@@ -1,0 +1,80 @@
+2024-04-19
+
+
+************* Module dhsc_data_tools.dac_odbc
+dhsc_data_tools\dac_odbc.py:26:0: C0303: Trailing whitespace (trailing-whitespac
+e)
+dhsc_data_tools\dac_odbc.py:29:0: C0303: Trailing whitespace (trailing-whitespac
+e)
+dhsc_data_tools\dac_odbc.py:3:0: E0401: Unable to import 'pyodbc' (import-error)
+dhsc_data_tools\dac_odbc.py:4:0: E0401: Unable to import 'pypac' (import-error)
+dhsc_data_tools\dac_odbc.py:34:21: W0212: Access to a protected member _return_c
+redential of a client class (protected-access)
+dhsc_data_tools\dac_odbc.py:35:12: W0212: Access to a protected member _return_t
+enant_id of a client class (protected-access)
+dhsc_data_tools\dac_odbc.py:38:37: W0212: Access to a protected member _scope of
+ a client class (protected-access)
+************* Module dhsc_data_tools.keyvault
+dhsc_data_tools\keyvault.py:42:0: C0303: Trailing whitespace (trailing-whitespac
+e)
+dhsc_data_tools\keyvault.py:4:0: E0401: Unable to import 'azure.keyvault.secrets
+' (import-error)
+dhsc_data_tools\keyvault.py:8:0: R0903: Too few public methods (1/2) (too-few-pu
+blic-methods)
+************* Module dhsc_data_tools.remote_compute
+dhsc_data_tools\remote_compute.py:4:0: E0401: Unable to import 'databricks.conne
+ct' (import-error)
+************* Module dhsc_data_tools._constants
+dhsc_data_tools\_constants.py:7:0: C0103: Constant name "_scope" doesn't conform
+ to UPPER_CASE naming style (invalid-name)
+dhsc_data_tools\_constants.py:10:0: C0103: Constant name "_client_id" doesn't co
+nform to UPPER_CASE naming style (invalid-name)
+dhsc_data_tools\_constants.py:12:0: C0103: Constant name "_authority" doesn't co
+nform to UPPER_CASE naming style (invalid-name)
+************* Module dhsc_data_tools._utils
+dhsc_data_tools\_utils.py:31:0: C0303: Trailing whitespace (trailing-whitespace)
+dhsc_data_tools\_utils.py:89:0: C0303: Trailing whitespace (trailing-whitespace)
+dhsc_data_tools\_utils.py:110:39: C0303: Trailing whitespace (trailing-whitespac
+e)
+dhsc_data_tools\_utils.py:11:0: E0401: Unable to import 'azure.identity' (import
+-error)
+dhsc_data_tools\_utils.py:12:0: E0401: Unable to import 'azure.identity' (import
+-error)
+dhsc_data_tools\_utils.py:13:0: E0401: Unable to import 'azure.identity' (import
+-error)
+dhsc_data_tools\_utils.py:92:18: W0212: Access to a protected member _authority
+of a client class (protected-access)
+dhsc_data_tools\_utils.py:92:50: W0212: Access to a protected member _client_id
+of a client class (protected-access)
+dhsc_data_tools\_utils.py:101:18: W0212: Access to a protected member _client_id
+ of a client class (protected-access)
+dhsc_data_tools\_utils.py:111:44: W0212: Access to a protected member _scope of
+a client class (protected-access)
+dhsc_data_tools\_utils.py:10:0: C0411: standard import "from pathlib import Path
+" should be placed before "import platformdirs" (wrong-import-order)
+
+-------------------------------------------------------------------
+Your code has been rated at 4.11/10 (previous run: 10.00/10, -5.89)
+
+
+2024-04-02
+
+************* Module dhsc_data_tools.auth_utils
+dhsc_data_tools\auth_utils.py:10:0: E0401: Unable to import 'azure.identity' (import-error)
+dhsc_data_tools\auth_utils.py:11:0: E0401: Unable to import 'azure.identity' (import-error)
+************* Module dhsc_data_tools.dac_odbc
+dhsc_data_tools\dac_odbc.py:4:0: E0401: Unable to import 'pyodbc' (import-error)
+dhsc_data_tools\dac_odbc.py:5:0: E0401: Unable to import 'azure.identity' (import-error)
+dhsc_data_tools\dac_odbc.py:6:0: E0401: Unable to import 'pypac' (import-error)
+************* Module dhsc_data_tools.keyvault
+dhsc_data_tools\keyvault.py:4:0: E0401: Unable to import 'azure.keyvault.secrets' (import-error)
+dhsc_data_tools\keyvault.py:5:0: E0401: Unable to import 'azure.identity' (import-error)
+dhsc_data_tools\keyvault.py:9:0: C0103: Class name "kvConnection" doesn't conform to PascalCase naming style (invalid-name)
+dhsc_data_tools\keyvault.py:83:8: W0612: Unused variable 'token' (unused-variable)
+dhsc_data_tools\keyvault.py:9:0: R0903: Too few public methods (1/2) (too-few-public-methods)
+************* Module dhsc_data_tools.remote_compute
+dhsc_data_tools\remote_compute.py:4:0: E0401: Unable to import 'databricks.connect' (import-error)
+
+------------------------------------------------------------------
+Your code has been rated at 5.94/10 (previous run: 5.94/10, +0.00)
+

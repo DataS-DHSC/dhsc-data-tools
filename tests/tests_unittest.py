@@ -3,7 +3,7 @@ import time
 from pypac import pac_context_for_url
 import unittest
 from dhsc_data_tools.dac_odbc import connect
-from dhsc_data_tools.keyvault import kvConnection
+from dhsc_data_tools.keyvault import KVConnection
 from dhsc_data_tools.remote_compute import connect_cluster
 
 from dotenv import load_dotenv
@@ -21,10 +21,10 @@ class Tests(unittest.TestCase):
 
     def test_keyvaultconnection(self):
         with pac_context_for_url("https://www.google.co.uk"):
-            kvc = kvConnection("DEV")
+            kvc = KVConnection("DEV")
             my_key = kvc.get_secret('dummy-example-key')
         self.assertEqual(my_key, '123456789')
-        time.sleep(5)
+        time.sleep(3)
 
     def test_dac_odbc_connect(self):
         conn = connect()
@@ -33,7 +33,7 @@ class Tests(unittest.TestCase):
         columns = [column[0] for column in cursor.description]
         self.assertEqual(columns[0], "tpep_pickup_datetime")
         conn.close()
-        time.sleep(5)
+        #time.sleep(3)
 
     def test_remote_compute_connect_cluster(self):
         pass

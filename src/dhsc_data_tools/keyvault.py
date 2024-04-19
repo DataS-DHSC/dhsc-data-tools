@@ -27,7 +27,7 @@ class KVConnection:
             )
 
         temp_vault_name = os.getenv("KEY_VAULT_NAME")
-        temp_vault_name = None
+
         if temp_vault_name:
             # KEY_VAULT_NAME must include {env} for .format method
             self.vault_name = temp_vault_name.format(env=environment.lower())
@@ -43,7 +43,7 @@ class KVConnection:
         self.kv_uri = f"https://{self.vault_name}.vault.azure.net"
 
         # Define Azure Identity Credential
-        self.credential = _utils.return_credential(
+        self.credential = _utils._return_credential(
             _utils._return_tenant_id()
             )
 

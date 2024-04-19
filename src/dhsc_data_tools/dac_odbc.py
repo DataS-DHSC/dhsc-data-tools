@@ -21,13 +21,17 @@ def connect(environment: str = "prod"):
     Returns: connection object.
     """
 
-    # establish keyvault connection
-    kvc = KVConnection(environment)
-
+    # Set PAC context
+    with pac_context_for_url("https://www.google.co.uk/"):
+    
+        # establish keyvault connection
+        kvc = KVConnection(environment)
+        
     # Set PAC context
     with pac_context_for_url(kvc.kv_uri):
+
         # Define Azure Identity Credential
-        credential = _utils.return_credential(
+        credential = _utils._return_credential(
             _utils._return_tenant_id()
             )
         # Get token
