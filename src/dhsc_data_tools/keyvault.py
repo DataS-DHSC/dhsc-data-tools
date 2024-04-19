@@ -27,12 +27,18 @@ class KVConnection:
             )
 
         temp_vault_name = os.getenv("KEY_VAULT_NAME")
-        
+        temp_vault_name = None
         if temp_vault_name:
             # KEY_VAULT_NAME must include {env} for .format method
             self.vault_name = temp_vault_name.format(env=environment.lower())
         else:
-            raise KeyError("KEY_VAULT_NAME environment variable not found.")
+            raise KeyError(
+                """
+                KEY_VAULT_NAME environment variable not found.
+                Make sure KEY_VAULT_NAME is in your .env file
+                and .env file is loaded.
+                """
+                )
         
         self.kv_uri = f"https://{self.vault_name}.vault.azure.net"
 

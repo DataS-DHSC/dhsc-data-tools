@@ -6,22 +6,30 @@ They are not meant to be called directly.
 import os
 import hashlib
 import json
-from pathlib import Path
 import platformdirs
-from dhsc_data_tools import _constants
+from pathlib import Path
 from azure.identity import InteractiveBrowserCredential
 from azure.identity import AuthenticationRecord
 from azure.identity import TokenCachePersistenceOptions
+from dhsc_data_tools import _constants
 
 
 def _return_tenant_id():
     """
-    Find DAC_TENANT (tenant name) environment var
+    Find DAC_TENANT (tenant name) environment variable.
     to define tenant_id
     """
     tenant_id = os.getenv("DAC_TENANT")
     if tenant_id is None:
-        raise KeyError("DAC_TENANT environment variable not found.")
+        raise KeyError(
+            """
+            DAC_TENANT environment variable not found.
+            Make sure DAC_TENANT is in your .env file
+            and .env file is loaded.
+            """
+            )
+    
+    return tenant_id
 
 def _get_authentication_record_filename(**kwargs):
     """

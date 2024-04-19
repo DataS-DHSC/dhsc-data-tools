@@ -36,6 +36,12 @@ def connect(environment: str = "prod"):
         host_name = kvc.get_secret("dac-db-host")
         ep_path = kvc.get_secret("dac-sql-endpoint-http-path")
 
+    # User warning
+    print(
+        "Creating connection.", 
+        "This may take some time if cluster needs starting."
+        )
+
     # establish connection and return object
     conn = pyodbc.connect(
         "Driver=Simba Spark ODBC Driver;"
