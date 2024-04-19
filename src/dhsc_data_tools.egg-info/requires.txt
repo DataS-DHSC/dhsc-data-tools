@@ -1,6 +1,7 @@
 pyodbc
 pypac
 pyyaml
+platformdirs
 azure-identity
 azure-keyvault-secrets
 databricks-connect
