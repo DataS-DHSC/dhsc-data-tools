@@ -6,8 +6,8 @@ They are not meant to be called directly.
 import os
 import hashlib
 import json
-import platformdirs
 from pathlib import Path
+import platformdirs
 from azure.identity import InteractiveBrowserCredential
 from azure.identity import AuthenticationRecord
 from azure.identity import TokenCachePersistenceOptions
@@ -94,10 +94,10 @@ def _return_credential(tenant_id: str, refresh_token: bool = False):
         tenantId=tenant_id,
     )
 
-    authentication_record = _read_authentication_record(authentication_record_path)
-
-    if refresh_token == True:
+    if refresh_token:
         authentication_record = None
+    else:
+        authentication_record = _read_authentication_record(authentication_record_path)
 
     # Return credentia
     credential = InteractiveBrowserCredential(

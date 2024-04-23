@@ -26,15 +26,12 @@ def connect(environment: str = "prod", refresh_token: bool = False):
     """
 
     # Set PAC context
-    with pac_context_for_url("https://www.google.co.uk/"):
+    with pac_context_for_url(f"https://{_constants._authority}/"):
         # establish keyvault connection
-        kvc = KVConnection(environment)
-
-    # Set PAC context
-    with pac_context_for_url(kvc.kv_uri):
+        kvc = KVConnection(environment, refresh_token=refresh_token)
         # Define Azure Identity Credential
         credential = _utils._return_credential(
-            _utils._return_tenant_id(), refresh_token=refresh_token
+            _utils._return_tenant_id()
         )
         # Get token
         token = credential.get_token(_constants._scope)
