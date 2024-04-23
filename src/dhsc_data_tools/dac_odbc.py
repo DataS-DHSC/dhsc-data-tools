@@ -7,11 +7,15 @@ from dhsc_data_tools import _utils
 from dhsc_data_tools import _constants
 
 
-def connect(environment: str = "prod"):
-    """Allows to connect to data within the DAC, and query it using SQL queries.
+def connect(environment: str = "prod", refresh_token: bool = False):
+    """Allows to connect to data within the DAC, and use SQL queries.
 
-    Parameters: an environment argument, which defaults to "prod".
+    Parameters: 
+    an `environment` argument, which defaults to "prod".
     Must be one of "dev", "qa", "test" or "prod".
+
+    `refresh_token`: when True, will trigger re-authentication 
+    instead of using cached credentials. False by default.
 
     Requires:
     KEY_VAULT_NAME and DAC_TENANT environment variables.
@@ -32,7 +36,8 @@ def connect(environment: str = "prod"):
 
         # Define Azure Identity Credential
         credential = _utils._return_credential(
-            _utils._return_tenant_id()
+            _utils._return_tenant_id(),
+            refresh_token=refresh_token
             )
         # Get token
         token = credential.get_token(_constants._scope)

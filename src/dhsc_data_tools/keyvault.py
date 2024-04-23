@@ -10,16 +10,19 @@ class KVConnection:
     Key vault connection object.
 
     Parameters:
-    Takes an environment name parameter, which must be one of
+    Takes an `environment` name parameter, which must be one of
     "dev", "test", "qa" or "prod". Defaults to "prod". (Not case sensitive.)
     It will look for a corresponding key vault name in environment variables.
+    
+    `refresh_token`: when True, will trigger re-authentication instead of using cached
+    credentials. False by default.
 
     Requires: KEY_VAULT_NAME and DAC_TENANT environment variables.
 
     Returns: Azure Keyvault Connection object.
     """
 
-    def __init__(self, environment: str = "prod"):
+    def __init__(self, environment: str = "prod", refresh_token: bool = False):
         # Check issues with the env name parameter input by user
         if environment.upper() not in ["DEV", "TEST", "QA", "PROD"]:
             raise ValueError(
@@ -44,7 +47,8 @@ class KVConnection:
 
         # Define Azure Identity Credential
         self.credential = _utils._return_credential(
-            _utils._return_tenant_id()
+            tenant_id = _utils._return_tenant_id(),
+            refresh_token=refresh_token
             )
 
         # Establish Azure Keyvault SecretClient

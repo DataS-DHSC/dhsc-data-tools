@@ -82,7 +82,7 @@ def _write_authentication_record(authentication_record_path, authentication_reco
         outfile.write(authentication_record.serialize())
 
 
-def _return_credential(tenant_id):
+def _return_credential(tenant_id: str, refresh_token: bool = False):
     """
     Returns an interactive browser credential object.
     """
@@ -95,6 +95,9 @@ def _return_credential(tenant_id):
     authentication_record = _read_authentication_record(
         authentication_record_path
     )
+
+    if refresh_token == True:
+        authentication_record = None
 
     # Return credentia
     credential = InteractiveBrowserCredential(
