@@ -26,7 +26,7 @@ def connect(environment: str = "prod", refresh_token: bool = False):
     """
 
     # Set PAC context
-    with pac_context_for_url(f"https://{_constants._authority}/"):
+    with pac_context_for_url(f"https://{_constants._AUTHORITY}/"):
         # establish keyvault connection
         kvc = KVConnection(environment, refresh_token=refresh_token)
         # Define Azure Identity Credential
@@ -34,7 +34,7 @@ def connect(environment: str = "prod", refresh_token: bool = False):
             _utils._return_tenant_id()
         )
         # Get token
-        token = credential.get_token(_constants._scope)
+        token = credential.get_token(_constants._SCOPE)
         # retrieve relevant key vault secrets
         host_name = kvc.get_secret("dac-db-host")
         ep_path = kvc.get_secret("dac-sql-endpoint-http-path")

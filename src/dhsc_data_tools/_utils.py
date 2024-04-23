@@ -89,8 +89,8 @@ def _return_credential(tenant_id: str, refresh_token: bool = False):
 
     # Authentication process, attempts cached authentication first
     authentication_record_path = _get_authentication_record_path(
-        authority=_constants._authority,
-        clientId=_constants._client_id,
+        authority=_constants._AUTHORITY,
+        clientId=_constants._CLIENT_ID,
         tenantId=tenant_id,
     )
 
@@ -101,7 +101,7 @@ def _return_credential(tenant_id: str, refresh_token: bool = False):
 
     # Return credentia
     credential = InteractiveBrowserCredential(
-        client_id=_constants._client_id,
+        client_id=_constants._CLIENT_ID,
         cache_persistence_options=TokenCachePersistenceOptions(),
         additionally_allowed_tenants=["*"],
         tenant_id=tenant_id,

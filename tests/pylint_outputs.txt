@@ -1,3 +1,32 @@
+2024-04-23
+
+
+************* Module dhsc_data_tools.dac_odbc
+dhsc_data_tools\dac_odbc.py:3:0: E0401: Unable to import 'pyodbc' (import-error)
+dhsc_data_tools\dac_odbc.py:4:0: E0401: Unable to import 'pypac' (import-error)
+dhsc_data_tools\dac_odbc.py:29:40: W0212: Access to a protected member _AUTHORITY of a client class (protected-access)
+dhsc_data_tools\dac_odbc.py:33:21: W0212: Access to a protected member _return_credential of a client class (protected-access)
+dhsc_data_tools\dac_odbc.py:34:12: W0212: Access to a protected member _return_tenant_id of a client class (protected-access)
+dhsc_data_tools\dac_odbc.py:37:37: W0212: Access to a protected member _SCOPE of a client class (protected-access)
+************* Module dhsc_data_tools.keyvault
+dhsc_data_tools\keyvault.py:4:0: E0401: Unable to import 'azure.keyvault.secrets' (import-error)
+dhsc_data_tools\keyvault.py:8:0: R0903: Too few public methods (1/2) (too-few-public-methods)
+************* Module dhsc_data_tools.remote_compute
+dhsc_data_tools\remote_compute.py:4:0: E0401: Unable to import 'databricks.connect' (import-error)
+************* Module dhsc_data_tools._utils
+dhsc_data_tools\_utils.py:11:0: E0401: Unable to import 'azure.identity' (import-error)
+dhsc_data_tools\_utils.py:12:0: E0401: Unable to import 'azure.identity' (import-error)
+dhsc_data_tools\_utils.py:13:0: E0401: Unable to import 'azure.identity' (import-error)
+dhsc_data_tools\_utils.py:92:18: W0212: Access to a protected member _AUTHORITY of a client class (protected-access)
+dhsc_data_tools\_utils.py:93:17: W0212: Access to a protected member _CLIENT_ID of a client class (protected-access)
+dhsc_data_tools\_utils.py:104:18: W0212: Access to a protected member _CLIENT_ID of a client class (protected-access)
+
+------------------------------------------------------------------
+Your code has been rated at 5.27/10 (previous run: 4.95/10, +0.33)
+
+
+
+
 2024-04-19
 
 

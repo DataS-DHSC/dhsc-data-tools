@@ -5,13 +5,16 @@ Module to interact with Azure Keyvaults
 Classes
 -------
 
-`kvConnection(environment: str = 'prod')`
+`KVConnection(environment: str = 'prod', refresh_token: bool = False)`
 :   Key vault connection object.
     
     Parameters:
-    Takes an environment name parameter, which must be one of
+    Takes an `environment` name parameter, which must be one of
     "dev", "test", "qa" or "prod". Defaults to "prod". (Not case sensitive.)
     It will look for a corresponding key vault name in environment variables.
+    
+    `refresh_token`: when True, will trigger re-authentication instead of using cached
+    credentials. False by default.
     
     Requires: KEY_VAULT_NAME and DAC_TENANT environment variables.
     

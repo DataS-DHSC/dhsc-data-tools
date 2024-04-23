@@ -1,6 +1,6 @@
 # dhsc_data_tools package
 
-**In active development**
+**Stable branch: main**
 
 The goal of DHSCdatatools is to provide a suite of tools for using data hosted on the DHSC analytical cloud (DAC) platform. 
 [For detailed developer documentation click here.](https://github.com/DataS-DHSC/dhsc-data-tools/tree/main/docs/dhsc_data_tools)
