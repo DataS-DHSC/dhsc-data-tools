@@ -108,7 +108,7 @@ def _return_credential(tenant_id):
     if authentication_record is None:
         _write_authentication_record(
             authentication_record_path, 
-            credential.authenticate(scopes=[_constants._scope])
+            credential.authenticate()
         )
 
     return credential
