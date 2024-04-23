@@ -23,6 +23,14 @@ dependencies = [
   "databricks-connect",
 ]
 
+[project.optional-dependencies]
+dev = [
+    "black",
+    "pylint",
+    "pdoc3",
+    "pytest",
+]
+
 [project.urls]
 Homepage = "https://github.com/DataS-DHSC/dhsc-data-tools"
 Issues = "https://github.com/DataS-DHSC/dhsc-data-tools/issues"

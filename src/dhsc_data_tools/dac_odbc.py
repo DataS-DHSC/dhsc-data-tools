@@ -10,11 +10,11 @@ from dhsc_data_tools import _constants
 def connect(environment: str = "prod", refresh_token: bool = False):
     """Allows to connect to data within the DAC, and use SQL queries.
 
-    Parameters: 
+    Parameters:
     an `environment` argument, which defaults to "prod".
     Must be one of "dev", "qa", "test" or "prod".
 
-    `refresh_token`: when True, will trigger re-authentication 
+    `refresh_token`: when True, will trigger re-authentication
     instead of using cached credentials. False by default.
 
     Requires:
@@ -27,18 +27,15 @@ def connect(environment: str = "prod", refresh_token: bool = False):
 
     # Set PAC context
     with pac_context_for_url("https://www.google.co.uk/"):
-    
         # establish keyvault connection
         kvc = KVConnection(environment)
-        
+
     # Set PAC context
     with pac_context_for_url(kvc.kv_uri):
-
         # Define Azure Identity Credential
         credential = _utils._return_credential(
-            _utils._return_tenant_id(),
-            refresh_token=refresh_token
-            )
+            _utils._return_tenant_id(), refresh_token=refresh_token
+        )
         # Get token
         token = credential.get_token(_constants._scope)
         # retrieve relevant key vault secrets
@@ -46,10 +43,7 @@ def connect(environment: str = "prod", refresh_token: bool = False):
         ep_path = kvc.get_secret("dac-sql-endpoint-http-path")
 
     # User warning
-    print(
-        "Creating connection.", 
-        "This may take some time if cluster needs starting."
-        )
+    print("Creating connection. This may take some time if cluster needs starting.")
 
     # establish connection and return object
     conn = pyodbc.connect(

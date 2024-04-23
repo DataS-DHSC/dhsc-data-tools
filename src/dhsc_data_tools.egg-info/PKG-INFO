@@ -40,6 +40,11 @@ Requires-Dist: platformdirs
 Requires-Dist: azure-identity
 Requires-Dist: azure-keyvault-secrets
 Requires-Dist: databricks-connect
+Provides-Extra: dev
+Requires-Dist: black; extra == "dev"
+Requires-Dist: pylint; extra == "dev"
+Requires-Dist: pdoc3; extra == "dev"
+Requires-Dist: pytest; extra == "dev"
 
 # dhsc_data_tools package
 

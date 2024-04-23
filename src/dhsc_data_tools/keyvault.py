@@ -13,7 +13,7 @@ class KVConnection:
     Takes an `environment` name parameter, which must be one of
     "dev", "test", "qa" or "prod". Defaults to "prod". (Not case sensitive.)
     It will look for a corresponding key vault name in environment variables.
-    
+
     `refresh_token`: when True, will trigger re-authentication instead of using cached
     credentials. False by default.
 
@@ -41,15 +41,14 @@ class KVConnection:
                 Make sure KEY_VAULT_NAME is in your .env file
                 and .env file is loaded.
                 """
-                )
-        
+            )
+
         self.kv_uri = f"https://{self.vault_name}.vault.azure.net"
 
         # Define Azure Identity Credential
         self.credential = _utils._return_credential(
-            tenant_id = _utils._return_tenant_id(),
-            refresh_token=refresh_token
-            )
+            tenant_id=_utils._return_tenant_id(), refresh_token=refresh_token
+        )
 
         # Establish Azure Keyvault SecretClient
         self.client = SecretClient(vault_url=self.kv_uri, credential=self.credential)

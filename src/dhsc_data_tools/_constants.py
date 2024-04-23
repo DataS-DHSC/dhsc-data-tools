@@ -1,4 +1,4 @@
-'''Contains constant values shared across modules'''
+"""Contains constant values shared across modules"""
 
 # Do not change the value of the scope parameter.
 # It represents the programmatic ID for Azure Databricks

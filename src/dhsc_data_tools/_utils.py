@@ -27,9 +27,10 @@ def _return_tenant_id():
             Make sure DAC_TENANT is in your .env file
             and .env file is loaded.
             """
-            )
-    
+        )
+
     return tenant_id
+
 
 def _get_authentication_record_filename(**kwargs):
     """
@@ -49,10 +50,7 @@ def _get_authentication_record_path(**kwargs):
     """
     ar_base = Path(platformdirs.user_data_dir("dhsc_data_tools", "python"))
     if not ar_base.is_dir():
-        print(
-            "Creating a user data folder to save credentials to it at",
-            ar_base
-        )
+        print("Creating a user data folder to save credentials to it at", ar_base)
     ar_base.mkdir(parents=True, exist_ok=True)
 
     return ar_base / _get_authentication_record_filename(**kwargs)
@@ -71,7 +69,9 @@ def _read_authentication_record(authentication_record_path, use_cache=True):
     return auth_rec
 
 
-def _write_authentication_record(authentication_record_path, authentication_record=None):
+def _write_authentication_record(
+    authentication_record_path, authentication_record=None
+):
     """
     Write auth record if authentication_record return is other than None type.
     """
@@ -86,15 +86,15 @@ def _return_credential(tenant_id: str, refresh_token: bool = False):
     """
     Returns an interactive browser credential object.
     """
-    
+
     # Authentication process, attempts cached authentication first
     authentication_record_path = _get_authentication_record_path(
-        authority=_constants._authority, clientId=_constants._client_id, tenantId=tenant_id
+        authority=_constants._authority,
+        clientId=_constants._client_id,
+        tenantId=tenant_id,
     )
 
-    authentication_record = _read_authentication_record(
-        authentication_record_path
-    )
+    authentication_record = _read_authentication_record(authentication_record_path)
 
     if refresh_token == True:
         authentication_record = None
@@ -110,8 +110,7 @@ def _return_credential(tenant_id: str, refresh_token: bool = False):
 
     if authentication_record is None:
         _write_authentication_record(
-            authentication_record_path, 
-            credential.authenticate()
+            authentication_record_path, credential.authenticate()
         )
 
     return credential
