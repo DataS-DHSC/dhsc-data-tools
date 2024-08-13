@@ -1,5 +1,6 @@
 Module dhsc_data_tools
 ======================
+These modules allow users to interact with the DAC
 
 Sub-modules
 -----------

@@ -1,3 +1,72 @@
+2024-04-23
+
+collected 3 items
+
+test_pytest.py ...                                     [100%]
+
+===================== warnings summary ======================
+<frozen importlib._bootstrap>:488
+  <frozen importlib._bootstrap>:488: DeprecationWarning: Type
+google._upb._message.MessageMapContainer uses PyType_Spec with
+ a metaclass that has custom tp_new. This is deprecated and wi
+ll no longer be allowed in Python 3.14.
+
+<frozen importlib._bootstrap>:488
+  <frozen importlib._bootstrap>:488: DeprecationWarning: Type
+google._upb._message.ScalarMapContainer uses PyType_Spec with
+a metaclass that has custom tp_new. This is deprecated and wil
+l no longer be allowed in Python 3.14.
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warn
+ings.html
+============== 3 passed, 2 warnings in 33.59s ===============
+
+
+
+19-04-2024
+
+Getting secret...
+Getting secret...
+Creating connection. This may take some time if cluster needs starting.
+.Getting secret...
+..
+----------------------------------------------------------------------
+Ran 3 tests in 13.596s
+
+OK
+
+
+User warning: Expect an authentication pop-up window.
+You will only be asked to authenticate on the first run.
+Getting secret...
+Getting secret...
+.Getting secret...
+..
+----------------------------------------------------------------------
+Ran 3 tests in 23.251s
+
+OK
+
+
+02-04-2024
+
+User warning: Expect an authentication pop-up window.
+You will only be asked to authenticate on the first run.
+Creating a user data folder and storing credentials in it...
+Creating a user data folder and storing credentials in it...
+Getting secret...
+Getting secret...
+.Creating a user data folder and storing credentials in it...
+Getting secret...
+..
+----------------------------------------------------------------------
+Ran 3 tests in 20.119s
+
+OK
+
+
+March 2024
+
 test_dac_odbc_connect (tests.tests_unittest.Tests.test_dac_odbc_connect) ... ok
 test_keyvaultconnection (tests.tests_unittest.Tests.test_keyvaultconnection) ... ok
 test_remote_compute_connect_cluster (tests.tests_unittest.Tests.test_remote_compute_connect_cluster) ... ok

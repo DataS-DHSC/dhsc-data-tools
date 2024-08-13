@@ -1,6 +1,13 @@
 pyodbc
 pypac
+pyyaml
+platformdirs
 azure-identity
 azure-keyvault-secrets
 databricks-connect
-configparser
+
+[dev]
+black
+pylint
+pdoc3
+pytest

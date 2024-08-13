@@ -1,6 +1,6 @@
 [project]
 name = "dhsc_data_tools"
-version = "0.0.1"
+version = "1.0.0"
 authors = [
   { name="Data Science Hub", email="datascience@dhsc.gov.uk" },
 ]
@@ -16,10 +16,19 @@ classifiers = [
 dependencies = [
   "pyodbc",
   "pypac",
+  "pyyaml",
+  "platformdirs",
   "azure-identity",
   "azure-keyvault-secrets",
   "databricks-connect",
-  "configparser",
+]
+
+[project.optional-dependencies]
+dev = [
+    "black",
+    "pylint",
+    "pdoc3",
+    "pytest",
 ]
 
 [project.urls]
