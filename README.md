@@ -7,15 +7,29 @@ The goal of DHSCdatatools is to provide a suite of tools for using data hosted o
 
 ## Pre-requisites
 
-A new conda environment is recommended for the package. In Git Bash:
+1. Local installation of Simba Spark ODBC Driver 32-bit and Simba Spark ODBC Driver 64-bit.
+
+2. A new conda environment is recommended for the package. In Git Bash:
 
 ```
-conda create -n <your_environment_name> pip python-dotenv
+conda create -n <your_environment_name> python==3.12 pip
+```
+
+> Some of the dependencies of this package are not currently compatible with the latest Python 3.13. Use any python version from and including 3.8 and below 3.13. E.g. above `python==3.12` is specified.
+
+### Working with `.env` files
+
+3. Though not strictly a package dependency, we recommend you install python-dotenv to work with `.env` files.
+
+In Git Bash, ***with the relevant environment activated***:
+
+```
+pip install python-dotenv
 ```
 
 ## To install the dhsc_data_tools package
 
-In Git Bash, with your relevant environment activated:
+In Git Bash, ***with the relevant environment activated***, to install **dhsc_data_tools**:
 
 ```
 pip install git+https://github.com/DataS-DHSC/dhsc-data-tools.git

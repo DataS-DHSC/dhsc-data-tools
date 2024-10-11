@@ -30,9 +30,7 @@ def connect(environment: str = "prod", refresh_token: bool = False):
         # establish keyvault connection
         kvc = KVConnection(environment, refresh_token=refresh_token)
         # Define Azure Identity Credential
-        credential = _utils._return_credential(
-            _utils._return_tenant_id()
-        )
+        credential = _utils._return_credential(_utils._return_tenant_id())
         # Get token
         token = credential.get_token(_constants._SCOPE)
         # retrieve relevant key vault secrets
