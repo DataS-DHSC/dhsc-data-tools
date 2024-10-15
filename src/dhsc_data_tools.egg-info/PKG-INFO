@@ -1,6 +1,6 @@
 Metadata-Version: 2.1
 Name: dhsc_data_tools
-Version: 1.0.0
+Version: 1.0.1
 Summary: An internal Python package to facilitate working with the DAC
 Author-email: Data Science Hub <datascience@dhsc.gov.uk>
 License: MIT License
@@ -30,7 +30,7 @@ Project-URL: Issues, https://github.com/DataS-DHSC/dhsc-data-tools/issues
 Classifier: Programming Language :: Python :: 3
 Classifier: License :: OSI Approved :: MIT License
 Classifier: Private :: Do Not Upload
-Requires-Python: >=3.8
+Requires-Python: <3.13,>=3.8
 Description-Content-Type: text/markdown
 License-File: LICENSE
 Requires-Dist: pyodbc
@@ -45,6 +45,7 @@ Requires-Dist: black; extra == "dev"
 Requires-Dist: pylint; extra == "dev"
 Requires-Dist: pdoc3; extra == "dev"
 Requires-Dist: pytest; extra == "dev"
+Requires-Dist: build; extra == "dev"
 
 # dhsc_data_tools package
 

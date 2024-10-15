@@ -11,3 +11,4 @@ black
 pylint
 pdoc3
 pytest
+build
