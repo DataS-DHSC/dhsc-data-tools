@@ -4,7 +4,6 @@ import logging
 
 import pandas as pd
 import pyodbc
-from tqdm import tqdm
 
 from dhsc_data_tools import dac_odbc
 
@@ -43,7 +42,7 @@ def _cursor_to_df(cursor: pyodbc.Connection) -> pd.DataFrame:
         None
     """
     df = pd.DataFrame(
-        [tuple(t) for t in tqdm(cursor.fetchall())],
+        [tuple(t) for t in cursor.fetchall()],
         columns=[i[0] for i in cursor.description],
     )
 
@@ -157,10 +156,7 @@ def df_from_dataflow(
     Returns:
         pd.DataFrame
     """
-    query_string = f"""
-        SELECT * 
-        FROM {dataflow}
-        """
+    query_string = f"SELECT * FROM {dataflow}"
     cursor = _query_databricks(sql_query=query_string, connection=connection)
     df = _cursor_to_df(cursor)
 
