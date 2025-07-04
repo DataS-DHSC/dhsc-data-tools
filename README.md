@@ -87,19 +87,25 @@ Contributions are welcome.
 
 ### Dev setup
 
+Clone this repository.
+
 Install requirements from `pyproject.toml`, including development and documentation dependencies.
 
 ```
-pip install . .[dev] .[docs]
+pip install . .[dev] .[docs] dotenv
 ```
 
-### Build
+### Build package
+
+Build dists.
 
 ```
 build .
 ```
 
 ### Update docs
+
+This will update the docs.
 
 ```
 sphinx-apidoc -o docs/source src/dhsc_data_tools && sphinx-build -M markdown docs/source/ docs/build/
