@@ -5,11 +5,13 @@
 The goal of DHSCdatatools is to provide a suite of tools for using data hosted on the DHSC analytical cloud (DAC) platform. 
 [For detailed documentation click here.](./docs/build/markdown/index.md)
 
-## Pre-requisites
+## Getting started 
 
-1. Local installation of Simba Spark ODBC Driver 32-bit and Simba Spark ODBC Driver 64-bit.
+### Pre-requisites
 
-2. A new conda environment is recommended for the package. In Git Bash:
+1. Local installation of Simba Spark ODBC Driver 32-bit and Simba Spark ODBC Driver 64-bit. Request these through the IT portal.
+
+2. Activate conda environment. To create a new env, in Git Bash:
 
 ```
 conda create -n <your_environment_name> python==3.12 pip
@@ -17,9 +19,7 @@ conda create -n <your_environment_name> python==3.12 pip
 
 > Some of the dependencies of this package are not currently compatible with the latest Python 3.13. Use any python version from and including 3.8 and below 3.13. E.g. above `python==3.12` is specified.
 
-### Working with `.env` files
-
-3. Though not strictly a package dependency, we recommend you install python-dotenv to work with `.env` files.
+3. Though not strictly a package dependency, we recommend you install python-dotenv to work with environment variables.
 
 In Git Bash, ***with the relevant environment activated***:
 
@@ -27,7 +27,7 @@ In Git Bash, ***with the relevant environment activated***:
 pip install python-dotenv
 ```
 
-## To install the dhsc_data_tools package
+### Install the dhsc_data_tools package
 
 In Git Bash, ***with the relevant environment activated***, to install **dhsc_data_tools**:
 
@@ -47,9 +47,9 @@ Place this file in your working directory.
 **Ensure in each project your `.gitignore` file excludes config, `.env`, and relevant yaml files.**
 If you do accidentally commit these files (or any other sensitive data) please get in touch with the [Data Science Hub](mailto:datascience@dhsc.gov.uk) to discuss how best to mitigate the breach.
 
-## Example use scripts
+### Example use scripts
 
-### Connecting to the DAC data using an SQL endpoint
+#### Connecting to the DAC data using an SQL endpoint
 
 ```python
 from dhsc_data_tools import dac_odbc
@@ -87,10 +87,10 @@ Contributions are welcome.
 
 ### Dev setup
 
-Install requirements from `pyproject.toml`.
+Install requirements from `pyproject.toml`, including development and documentation dependencies.
 
 ```
-pip install .
+pip install . .[dev] .[docs]
 ```
 
 ### Build
