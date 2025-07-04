@@ -19,7 +19,7 @@ def connect_cluster(
             token=xxx
             cluster_id=xxx
 
-        You can also pass a cluster_id parameter manually, which will 
+        You can also pass a cluster_id parameter manually, which will
         override the config file parameter.
 
     Args:

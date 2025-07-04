@@ -52,7 +52,7 @@ def _cursor_to_df(cursor: pyodbc.Connection) -> pd.DataFrame:
     return df
 
 
-def query_databricks(
+def _query_databricks(
     sql_query: str, connection: pyodbc.Connection = None
 ) -> pyodbc.Cursor:
     """Sends SQL query to the DAC over a connection.
@@ -71,7 +71,7 @@ def query_databricks(
     return cursor
 
 
-def get_catalogs_info(connection: pyodbc.Connection = None) -> pd.DataFrame:
+def get_catalogs(connection: pyodbc.Connection = None) -> pd.DataFrame:
     """Gets catalogs on the DAC.
 
     Args:
@@ -80,15 +80,13 @@ def get_catalogs_info(connection: pyodbc.Connection = None) -> pd.DataFrame:
     Returns:
         pd.DataFrame
     """
-    cursor = query_databricks(sql_query="SHOW CATALOGS", connection=connection)
+    cursor = _query_databricks(sql_query="SHOW CATALOGS", connection=connection)
     df = _cursor_to_df(cursor)
 
     return df
 
 
-def get_schemas_info(
-    catalog: str, connection: pyodbc.Connection = None
-) -> pd.DataFrame:
+def get_schemas(catalog: str, connection: pyodbc.Connection = None) -> pd.DataFrame:
     """Gets all schemas within the catalog.
 
     Args:
@@ -98,7 +96,7 @@ def get_schemas_info(
     Returns:
         pd.DataFrame
     """
-    cursor = query_databricks(
+    cursor = _query_databricks(
         sql_query=f"SHOW SCHEMAS IN {catalog}", connection=connection
     )
     df = _cursor_to_df(cursor)
@@ -106,7 +104,7 @@ def get_schemas_info(
     return df
 
 
-def get_tables_info(
+def get_tables(
     catalog: str, schema: str, connection: pyodbc.Connection = None
 ) -> pd.DataFrame:
     """Gets all tables within a given schema.
@@ -119,7 +117,7 @@ def get_tables_info(
     Returns:
         pd.DataFrame
     """
-    cursor = query_databricks(
+    cursor = _query_databricks(
         f"SHOW TABLES IN {catalog}.{schema}", connection=connection
     )
     df = _cursor_to_df(cursor)
@@ -127,29 +125,7 @@ def get_tables_info(
     return df
 
 
-def get_columns_info(
-    catalog: str, schema: str, table: str, connection: pyodbc.Connection = None
-) -> pd.DataFrame:
-    """Gets all columns within a given table.
-
-    Args:
-        catalog (str): catalog name.
-        schema (str): schema name.
-        table (str): table name.
-        connection [Optional] (pyodbc.Connection): ODBC connection object.
-            Defaults to None, in which case creates own connection.
-    Returns:
-        pd.DataFrame
-    """
-    cursor = query_databricks(
-        f"SHOW COLUMNS IN {catalog}.{schema}.{table}", connection=connection
-    )
-    df = _cursor_to_df(cursor)
-
-    return df
-
-
-def get_table_description(
+def get_table_info(
     catalog: str, schema: str, table: str, connection: pyodbc.Connection = None
 ) -> pd.DataFrame:
     """Gets table description of a given table.
@@ -163,7 +139,7 @@ def get_table_description(
     Returns:
         pd.DataFrame
     """
-    cursor = query_databricks(
+    cursor = _query_databricks(
         f"DESCRIBE TABLE EXTENDED {catalog}.{schema}.{table}", connection=connection
     )
     df = _cursor_to_df(cursor)
@@ -187,7 +163,23 @@ def df_from_dataflow(
         SELECT * 
         FROM {dataflow}
         """
-    cursor = query_databricks(sql_query=query_string, connection=connection)
+    cursor = _query_databricks(sql_query=query_string, connection=connection)
+    df = _cursor_to_df(cursor)
+
+    return df
+
+
+def df_from_sql(sql: str, connection: pyodbc.Connection = None) -> pd.DataFrame:
+    """Get data into a pandas DataFrame. Either custom SQL query, or full dataflow path.
+
+    Args:
+        sql (str): sql query.
+        connection [Optional] (pyodbc.Connection): ODBC connection object.
+            Defaults to None, in which case creates own connection.
+    Returns:
+        pd.DataFrame
+    """
+    cursor = _query_databricks(sql_query=sql, connection=connection)
     df = _cursor_to_df(cursor)
 
     return df
