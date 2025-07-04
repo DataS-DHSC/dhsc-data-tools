@@ -23,6 +23,7 @@ extensions = [
     "sphinx.ext.napoleon",
     "sphinx.ext.viewcode",
     "sphinx_markdown_builder",
+    "sphinx_mdinclude",
 ]
 
 templates_path = ["_templates"]
