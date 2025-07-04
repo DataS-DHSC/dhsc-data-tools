@@ -1,1 +1,1 @@
-"""These modules allow users to interact with the DAC."""
+"""This module allows users to interact with the DAC."""

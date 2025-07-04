@@ -4,21 +4,20 @@ import os
 
 from azure.keyvault.secrets import SecretClient
 
-from src.dhsc_data_tools import _auth_utils
+from dhsc_data_tools import _auth_utils
 
 
 class KVConnection:
     """Key vault connection object.
 
-    Args:
-    environment (str): DAC environment. Defaults to "prod".
-        Must be one of "dev", "qa", "test" or "prod".
-
-    refresh_token (bool): When True, will trigger re-authentication
-        instead of using cached credentials. Defaults to fault.
-
     Requires:
         KEY_VAULT_NAME and DAC_TENANT environment variables.
+
+    Args:
+        environment (str): DAC environment. Defaults to "prod".
+            Must be one of "dev", "qa", "test" or "prod".
+        refresh_token (bool): When True, will trigger re-authentication
+            instead of using cached credentials. Defaults to fault.
 
     Raises:
         ValueError: invalid environment.

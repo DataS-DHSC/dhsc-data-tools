@@ -1,11 +1,10 @@
-"""Module dac_odbc allows to interact with DAC SQL endpoints."""
+"""Module allows to interact with DAC SQL endpoints."""
 
 import pyodbc
 from pypac import pac_context_for_url
 
-from dhsc_data_tools import _constants
+from dhsc_data_tools import _auth_utils, _constants
 from dhsc_data_tools.keyvault import KVConnection
-from src.dhsc_data_tools import _auth_utils
 
 
 def connect(
@@ -13,17 +12,16 @@ def connect(
 ) -> pyodbc.Connection:
     """Allows to connect to data within the DAC, and use SQL queries.
 
-    Args:
-    environment (str): DAC environment. Defaults to "prod".
-        Must be one of "dev", "qa", "test" or "prod".
-
-    refresh_token (bool): When True, will trigger re-authentication
-        instead of using cached credentials. Defaults to fault.
-
     Requires:
         KEY_VAULT_NAME and DAC_TENANT environment variables.
         Simba Spark ODBC Driver is required.
         Request the latter through IT portal, install through company portal.
+
+    Args:
+        environment (str): DAC environment. Defaults to "prod".
+            Must be one of "dev", "qa", "test" or "prod".
+        refresh_token (bool): When True, will trigger re-authentication
+            instead of using cached credentials. Defaults to fault.
 
     Returns:
         pyodbc.Connection

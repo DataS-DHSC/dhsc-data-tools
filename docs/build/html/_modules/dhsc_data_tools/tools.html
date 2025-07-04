@@ -1,0 +1,302 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>dhsc_data_tools.tools &mdash; dhsc-data-tools  documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=80d5e7a1" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=e59714d7" />
+
+  
+      <script src="../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../_static/documentation_options.js?v=5929fcd5"></script>
+      <script src="../../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../index.html" class="icon icon-home">
+            dhsc-data-tools
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../modules.html">dhsc_data_tools</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">dhsc-data-tools</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">dhsc_data_tools.tools</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for dhsc_data_tools.tools</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;Tooling to work with DAC data.&quot;&quot;&quot;</span>
+
+<span class="kn">import</span> <span class="nn">logging</span>
+
+<span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+<span class="kn">import</span> <span class="nn">pyodbc</span>
+<span class="kn">from</span> <span class="nn">tqdm</span> <span class="kn">import</span> <span class="n">tqdm</span>
+
+<span class="kn">from</span> <span class="nn">dhsc_data_tools</span> <span class="kn">import</span> <span class="n">dac_odbc</span>
+
+<span class="n">_conn</span> <span class="o">=</span> <span class="kc">None</span>
+
+<span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="vm">__name__</span><span class="p">)</span>
+
+
+<span class="k">def</span> <span class="nf">_handle_client</span><span class="p">(</span><span class="n">connection</span><span class="p">:</span> <span class="n">pyodbc</span><span class="o">.</span><span class="n">Connection</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Handles connection to the DAC dac_odbc.connect. (Private method.)</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        connection [Optional] (pyodbc.Connection): ODBC connection object.</span>
+<span class="sd">            Defaults to None, in which case creates own connection.</span>
+<span class="sd">    Returns:</span>
+<span class="sd">        None</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">global</span> <span class="n">_conn</span>
+    <span class="k">if</span> <span class="n">connection</span><span class="p">:</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Using user defined DAC connection...&quot;</span><span class="p">)</span>
+        <span class="n">_conn</span> <span class="o">=</span> <span class="n">connection</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">_conn</span><span class="p">:</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Setting up DAC connection...&quot;</span><span class="p">)</span>
+        <span class="n">_conn</span> <span class="o">=</span> <span class="n">dac_odbc</span><span class="o">.</span><span class="n">connect</span><span class="p">()</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Exisiting connection found...&quot;</span><span class="p">)</span>
+
+
+<span class="k">def</span> <span class="nf">_cursor_to_df</span><span class="p">(</span><span class="n">cursor</span><span class="p">:</span> <span class="n">pyodbc</span><span class="o">.</span><span class="n">Connection</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Low-level implementation to collect query to pd.DataFrame. (Private method.)</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        connection [Optional] (pyodbc.Connection): ODBC connection object.</span>
+<span class="sd">            Defaults to None, in which case creates own connection.</span>
+<span class="sd">    Returns:</span>
+<span class="sd">        None</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span>
+        <span class="p">[</span><span class="nb">tuple</span><span class="p">(</span><span class="n">t</span><span class="p">)</span> <span class="k">for</span> <span class="n">t</span> <span class="ow">in</span> <span class="n">tqdm</span><span class="p">(</span><span class="n">cursor</span><span class="o">.</span><span class="n">fetchall</span><span class="p">())],</span>
+        <span class="n">columns</span><span class="o">=</span><span class="p">[</span><span class="n">i</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">cursor</span><span class="o">.</span><span class="n">description</span><span class="p">],</span>
+    <span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">df</span>
+
+
+<span class="k">def</span> <span class="nf">_query_databricks</span><span class="p">(</span>
+    <span class="n">sql_query</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">connection</span><span class="p">:</span> <span class="n">pyodbc</span><span class="o">.</span><span class="n">Connection</span> <span class="o">=</span> <span class="kc">None</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">pyodbc</span><span class="o">.</span><span class="n">Cursor</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Sends SQL query to the DAC over a connection. (Private method.)</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        sql_query (str): and sql query as string.</span>
+<span class="sd">        connection [Optional] (pyodbc.Connection): ODBC connection object.</span>
+<span class="sd">            Defaults to None, in which case creates own connection.</span>
+<span class="sd">    Returns:</span>
+<span class="sd">        pyodbc.Cursor</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">_handle_client</span><span class="p">(</span><span class="n">connection</span><span class="o">=</span><span class="n">connection</span><span class="p">)</span>
+    <span class="n">cursor</span> <span class="o">=</span> <span class="n">_conn</span><span class="o">.</span><span class="n">cursor</span><span class="p">()</span>
+    <span class="n">cursor</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="n">sql_query</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">cursor</span>
+
+
+<div class="viewcode-block" id="get_catalogs">
+<a class="viewcode-back" href="../../dhsc_data_tools.html#dhsc_data_tools.tools.get_catalogs">[docs]</a>
+<span class="k">def</span> <span class="nf">get_catalogs</span><span class="p">(</span><span class="n">connection</span><span class="p">:</span> <span class="n">pyodbc</span><span class="o">.</span><span class="n">Connection</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Gets catalogs on the DAC.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        connection [Optional] (pyodbc.Connection): ODBC connection object.</span>
+<span class="sd">            Defaults to None, in which case creates own connection.</span>
+<span class="sd">    Returns:</span>
+<span class="sd">        pd.DataFrame</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">cursor</span> <span class="o">=</span> <span class="n">_query_databricks</span><span class="p">(</span><span class="n">sql_query</span><span class="o">=</span><span class="s2">&quot;SHOW CATALOGS&quot;</span><span class="p">,</span> <span class="n">connection</span><span class="o">=</span><span class="n">connection</span><span class="p">)</span>
+    <span class="n">df</span> <span class="o">=</span> <span class="n">_cursor_to_df</span><span class="p">(</span><span class="n">cursor</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">df</span></div>
+
+
+
+<div class="viewcode-block" id="get_schemas">
+<a class="viewcode-back" href="../../dhsc_data_tools.html#dhsc_data_tools.tools.get_schemas">[docs]</a>
+<span class="k">def</span> <span class="nf">get_schemas</span><span class="p">(</span><span class="n">catalog</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">connection</span><span class="p">:</span> <span class="n">pyodbc</span><span class="o">.</span><span class="n">Connection</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Gets all schemas within the catalog.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        catalog (str): catalog name.</span>
+<span class="sd">        connection [Optional] (pyodbc.Connection): ODBC connection object.</span>
+<span class="sd">            Defaults to None, in which case creates own connection.</span>
+<span class="sd">    Returns:</span>
+<span class="sd">        pd.DataFrame</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">cursor</span> <span class="o">=</span> <span class="n">_query_databricks</span><span class="p">(</span>
+        <span class="n">sql_query</span><span class="o">=</span><span class="sa">f</span><span class="s2">&quot;SHOW SCHEMAS IN </span><span class="si">{</span><span class="n">catalog</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">connection</span><span class="o">=</span><span class="n">connection</span>
+    <span class="p">)</span>
+    <span class="n">df</span> <span class="o">=</span> <span class="n">_cursor_to_df</span><span class="p">(</span><span class="n">cursor</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">df</span></div>
+
+
+
+<div class="viewcode-block" id="get_tables">
+<a class="viewcode-back" href="../../dhsc_data_tools.html#dhsc_data_tools.tools.get_tables">[docs]</a>
+<span class="k">def</span> <span class="nf">get_tables</span><span class="p">(</span>
+    <span class="n">catalog</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">schema</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">connection</span><span class="p">:</span> <span class="n">pyodbc</span><span class="o">.</span><span class="n">Connection</span> <span class="o">=</span> <span class="kc">None</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Gets all tables within a given schema.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        catalog (str): catalog name.</span>
+<span class="sd">        schema (str): schema name.</span>
+<span class="sd">        connection [Optional] (pyodbc.Connection): ODBC connection object.</span>
+<span class="sd">            Defaults to None, in which case creates own connection.</span>
+<span class="sd">    Returns:</span>
+<span class="sd">        pd.DataFrame</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">cursor</span> <span class="o">=</span> <span class="n">_query_databricks</span><span class="p">(</span>
+        <span class="sa">f</span><span class="s2">&quot;SHOW TABLES IN </span><span class="si">{</span><span class="n">catalog</span><span class="si">}</span><span class="s2">.</span><span class="si">{</span><span class="n">schema</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">connection</span><span class="o">=</span><span class="n">connection</span>
+    <span class="p">)</span>
+    <span class="n">df</span> <span class="o">=</span> <span class="n">_cursor_to_df</span><span class="p">(</span><span class="n">cursor</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">df</span></div>
+
+
+
+<div class="viewcode-block" id="get_table_info">
+<a class="viewcode-back" href="../../dhsc_data_tools.html#dhsc_data_tools.tools.get_table_info">[docs]</a>
+<span class="k">def</span> <span class="nf">get_table_info</span><span class="p">(</span>
+    <span class="n">catalog</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">schema</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">table</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">connection</span><span class="p">:</span> <span class="n">pyodbc</span><span class="o">.</span><span class="n">Connection</span> <span class="o">=</span> <span class="kc">None</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Gets table description of a given table.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        catalog (str): catalog name.</span>
+<span class="sd">        schema (str): schema name.</span>
+<span class="sd">        table (str): table name.</span>
+<span class="sd">        connection [Optional] (pyodbc.Connection): ODBC connection object.</span>
+<span class="sd">            Defaults to None, in which case creates own connection.</span>
+<span class="sd">    Returns:</span>
+<span class="sd">        pd.DataFrame</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">cursor</span> <span class="o">=</span> <span class="n">_query_databricks</span><span class="p">(</span>
+        <span class="sa">f</span><span class="s2">&quot;DESCRIBE TABLE EXTENDED </span><span class="si">{</span><span class="n">catalog</span><span class="si">}</span><span class="s2">.</span><span class="si">{</span><span class="n">schema</span><span class="si">}</span><span class="s2">.</span><span class="si">{</span><span class="n">table</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">connection</span><span class="o">=</span><span class="n">connection</span>
+    <span class="p">)</span>
+    <span class="n">df</span> <span class="o">=</span> <span class="n">_cursor_to_df</span><span class="p">(</span><span class="n">cursor</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">df</span></div>
+
+
+
+<div class="viewcode-block" id="df_from_dataflow">
+<a class="viewcode-back" href="../../dhsc_data_tools.html#dhsc_data_tools.tools.df_from_dataflow">[docs]</a>
+<span class="k">def</span> <span class="nf">df_from_dataflow</span><span class="p">(</span>
+    <span class="n">dataflow</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">connection</span><span class="p">:</span> <span class="n">pyodbc</span><span class="o">.</span><span class="n">Connection</span> <span class="o">=</span> <span class="kc">None</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Get data into a pandas DataFrame. Either custom SQL query, or full dataflow path.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        dataflow (str): full dataflow path. (Pass either dataflow or sql.)</span>
+<span class="sd">        connection [Optional] (pyodbc.Connection): ODBC connection object.</span>
+<span class="sd">            Defaults to None, in which case creates own connection.</span>
+<span class="sd">    Returns:</span>
+<span class="sd">        pd.DataFrame</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">query_string</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;&quot;&quot;</span>
+<span class="s2">        SELECT * </span>
+<span class="s2">        FROM </span><span class="si">{</span><span class="n">dataflow</span><span class="si">}</span>
+<span class="s2">        &quot;&quot;&quot;</span>
+    <span class="n">cursor</span> <span class="o">=</span> <span class="n">_query_databricks</span><span class="p">(</span><span class="n">sql_query</span><span class="o">=</span><span class="n">query_string</span><span class="p">,</span> <span class="n">connection</span><span class="o">=</span><span class="n">connection</span><span class="p">)</span>
+    <span class="n">df</span> <span class="o">=</span> <span class="n">_cursor_to_df</span><span class="p">(</span><span class="n">cursor</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">df</span></div>
+
+
+
+<div class="viewcode-block" id="df_from_sql">
+<a class="viewcode-back" href="../../dhsc_data_tools.html#dhsc_data_tools.tools.df_from_sql">[docs]</a>
+<span class="k">def</span> <span class="nf">df_from_sql</span><span class="p">(</span><span class="n">sql</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">connection</span><span class="p">:</span> <span class="n">pyodbc</span><span class="o">.</span><span class="n">Connection</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Get data into a pandas DataFrame. Either custom SQL query, or full dataflow path.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        sql (str): sql query.</span>
+<span class="sd">        connection [Optional] (pyodbc.Connection): ODBC connection object.</span>
+<span class="sd">            Defaults to None, in which case creates own connection.</span>
+<span class="sd">    Returns:</span>
+<span class="sd">        pd.DataFrame</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">cursor</span> <span class="o">=</span> <span class="n">_query_databricks</span><span class="p">(</span><span class="n">sql_query</span><span class="o">=</span><span class="n">sql</span><span class="p">,</span> <span class="n">connection</span><span class="o">=</span><span class="n">connection</span><span class="p">)</span>
+    <span class="n">df</span> <span class="o">=</span> <span class="n">_cursor_to_df</span><span class="p">(</span><span class="n">cursor</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">df</span></div>
+
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2025, DHSC.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

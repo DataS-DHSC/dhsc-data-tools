@@ -4,14 +4,12 @@ import logging
 
 import pandas as pd
 import pyodbc
-from src.logger_tools import setup_logger
 from tqdm import tqdm
 
 from dhsc_data_tools import dac_odbc
 
 _conn = None
 
-setup_logger()
 logger = logging.getLogger(__name__)
 
 
@@ -55,7 +53,7 @@ def _cursor_to_df(cursor: pyodbc.Connection) -> pd.DataFrame:
 def _query_databricks(
     sql_query: str, connection: pyodbc.Connection = None
 ) -> pyodbc.Cursor:
-    """Sends SQL query to the DAC over a connection.
+    """Sends SQL query to the DAC over a connection. (Private method.)
 
     Args:
         sql_query (str): and sql query as string.

@@ -1,0 +1,366 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="./">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>dhsc_data_tools package &mdash; dhsc-data-tools  documentation</title>
+      <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=80d5e7a1" />
+      <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=e59714d7" />
+
+  
+      <script src="_static/jquery.js?v=5d32c60e"></script>
+      <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="_static/documentation_options.js?v=5929fcd5"></script>
+      <script src="_static/doctools.js?v=9bcbadda"></script>
+      <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="prev" title="dhsc_data_tools" href="modules.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="index.html" class="icon icon-home">
+            dhsc-data-tools
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="readme.html">Getting started</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="modules.html">dhsc_data_tools</a><ul class="current">
+<li class="toctree-l2 current"><a class="current reference internal" href="#">dhsc_data_tools package</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#submodules">Submodules</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#module-dhsc_data_tools.dac_odbc">dhsc_data_tools.dac_odbc module</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#dhsc_data_tools.dac_odbc.connect"><code class="docutils literal notranslate"><span class="pre">connect()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#module-dhsc_data_tools.keyvault">dhsc_data_tools.keyvault module</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#dhsc_data_tools.keyvault.KVConnection"><code class="docutils literal notranslate"><span class="pre">KVConnection</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#module-dhsc_data_tools.remote_compute">dhsc_data_tools.remote_compute module</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#dhsc_data_tools.remote_compute.connect_cluster"><code class="docutils literal notranslate"><span class="pre">connect_cluster()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#module-dhsc_data_tools.tools">dhsc_data_tools.tools module</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#dhsc_data_tools.tools.df_from_dataflow"><code class="docutils literal notranslate"><span class="pre">df_from_dataflow()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#dhsc_data_tools.tools.df_from_sql"><code class="docutils literal notranslate"><span class="pre">df_from_sql()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#dhsc_data_tools.tools.get_catalogs"><code class="docutils literal notranslate"><span class="pre">get_catalogs()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#dhsc_data_tools.tools.get_schemas"><code class="docutils literal notranslate"><span class="pre">get_schemas()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#dhsc_data_tools.tools.get_table_info"><code class="docutils literal notranslate"><span class="pre">get_table_info()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#dhsc_data_tools.tools.get_tables"><code class="docutils literal notranslate"><span class="pre">get_tables()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#module-dhsc_data_tools">Module contents</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">dhsc-data-tools</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="modules.html">dhsc_data_tools</a></li>
+      <li class="breadcrumb-item active">dhsc_data_tools package</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="_sources/dhsc_data_tools.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="dhsc-data-tools-package">
+<h1>dhsc_data_tools package<a class="headerlink" href="#dhsc-data-tools-package" title="Link to this heading"></a></h1>
+<section id="submodules">
+<h2>Submodules<a class="headerlink" href="#submodules" title="Link to this heading"></a></h2>
+</section>
+<section id="module-dhsc_data_tools.dac_odbc">
+<span id="dhsc-data-tools-dac-odbc-module"></span><h2>dhsc_data_tools.dac_odbc module<a class="headerlink" href="#module-dhsc_data_tools.dac_odbc" title="Link to this heading"></a></h2>
+<p>Module allows to interact with DAC SQL endpoints.</p>
+<dl class="py function">
+<dt class="sig sig-object py" id="dhsc_data_tools.dac_odbc.connect">
+<span class="sig-prename descclassname"><span class="pre">dhsc_data_tools.dac_odbc.</span></span><span class="sig-name descname"><span class="pre">connect</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">environment</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'prod'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">refresh_token</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Connection</span></span></span><a class="reference internal" href="_modules/dhsc_data_tools/dac_odbc.html#connect"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#dhsc_data_tools.dac_odbc.connect" title="Link to this definition"></a></dt>
+<dd><p>Allows to connect to data within the DAC, and use SQL queries.</p>
+<dl class="simple">
+<dt>Requires:</dt><dd><p>KEY_VAULT_NAME and DAC_TENANT environment variables.
+Simba Spark ODBC Driver is required.
+Request the latter through IT portal, install through company portal.</p>
+</dd>
+</dl>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>environment</strong> (<em>str</em>) – DAC environment. Defaults to “prod”.
+Must be one of “dev”, “qa”, “test” or “prod”.</p></li>
+<li><p><strong>refresh_token</strong> (<em>bool</em>) – When True, will trigger re-authentication
+instead of using cached credentials. Defaults to fault.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>pyodbc.Connection</p>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
+<section id="module-dhsc_data_tools.keyvault">
+<span id="dhsc-data-tools-keyvault-module"></span><h2>dhsc_data_tools.keyvault module<a class="headerlink" href="#module-dhsc_data_tools.keyvault" title="Link to this heading"></a></h2>
+<p>Module to interact with Azure Keyvaults</p>
+<dl class="py class">
+<dt class="sig sig-object py" id="dhsc_data_tools.keyvault.KVConnection">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">dhsc_data_tools.keyvault.</span></span><span class="sig-name descname"><span class="pre">KVConnection</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">environment</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'prod'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">refresh_token</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/dhsc_data_tools/keyvault.html#KVConnection"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#dhsc_data_tools.keyvault.KVConnection" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Key vault connection object.</p>
+<dl class="simple">
+<dt>Requires:</dt><dd><p>KEY_VAULT_NAME and DAC_TENANT environment variables.</p>
+</dd>
+</dl>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>environment</strong> (<em>str</em>) – DAC environment. Defaults to “prod”.
+Must be one of “dev”, “qa”, “test” or “prod”.</p></li>
+<li><p><strong>refresh_token</strong> (<em>bool</em>) – When True, will trigger re-authentication
+instead of using cached credentials. Defaults to fault.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><ul class="simple">
+<li><p><strong>ValueError</strong> – invalid environment.</p></li>
+<li><p><strong>KeyError</strong> – environment variables not found.</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="dhsc_data_tools.keyvault.KVConnection.get_secret">
+<span class="sig-name descname"><span class="pre">get_secret</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">secret_name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">str</span></span></span><a class="reference internal" href="_modules/dhsc_data_tools/keyvault.html#KVConnection.get_secret"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#dhsc_data_tools.keyvault.KVConnection.get_secret" title="Link to this definition"></a></dt>
+<dd><p>Returns the <em>value</em> of the secret.</p>
+<p>Args:
+secret_name (str): name of the sought secret.</p>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p>User might have to set HTTP/HTTPS proxy as PAC context explicitly
+before running kvconnection.get_secret().</p>
+</div>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+<section id="module-dhsc_data_tools.remote_compute">
+<span id="dhsc-data-tools-remote-compute-module"></span><h2>dhsc_data_tools.remote_compute module<a class="headerlink" href="#module-dhsc_data_tools.remote_compute" title="Link to this heading"></a></h2>
+<p>Module allows to run code on Azure Databricks clusters.</p>
+<dl class="py function">
+<dt class="sig sig-object py" id="dhsc_data_tools.remote_compute.connect_cluster">
+<span class="sig-prename descclassname"><span class="pre">dhsc_data_tools.remote_compute.</span></span><span class="sig-name descname"><span class="pre">connect_cluster</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">profile</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'DEFAULT'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">file</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'config_yaml'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cluster_uid</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">DatabricksSession</span></span></span><a class="reference internal" href="_modules/dhsc_data_tools/remote_compute.html#connect_cluster"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#dhsc_data_tools.remote_compute.connect_cluster" title="Link to this definition"></a></dt>
+<dd><p>Establishes a connection with a databricks compute cluster.</p>
+<dl>
+<dt>Requires:</dt><dd><p>It relies on a yaml configuration file in the working directory,
+which by default reads <cite>config.yaml</cite>, containing profile entries
+such as:</p>
+<dl class="simple">
+<dt>your-profile-name:</dt><dd><p>host=xxx
+token=xxx
+cluster_id=xxx</p>
+</dd>
+</dl>
+<p>You can also pass a cluster_id parameter manually, which will
+override the config file parameter.</p>
+</dd>
+</dl>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>profile</strong> (<em>str</em>) – config profile name defaults to “DEFAULT”.</p></li>
+<li><p><strong>file</strong> (<em>str</em>) – the config file’s name or path.</p></li>
+<li><p><strong>[</strong><strong>Optional</strong><strong>]</strong> (<em>cluster_uid</em>) – specify cluster to run code on.
+Connects to default shared if not specified.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>DatabricksSession</p>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
+<section id="module-dhsc_data_tools.tools">
+<span id="dhsc-data-tools-tools-module"></span><h2>dhsc_data_tools.tools module<a class="headerlink" href="#module-dhsc_data_tools.tools" title="Link to this heading"></a></h2>
+<p>Tooling to work with DAC data.</p>
+<dl class="py function">
+<dt class="sig sig-object py" id="dhsc_data_tools.tools.df_from_dataflow">
+<span class="sig-prename descclassname"><span class="pre">dhsc_data_tools.tools.</span></span><span class="sig-name descname"><span class="pre">df_from_dataflow</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dataflow</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">connection</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Connection</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">DataFrame</span></span></span><a class="reference internal" href="_modules/dhsc_data_tools/tools.html#df_from_dataflow"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#dhsc_data_tools.tools.df_from_dataflow" title="Link to this definition"></a></dt>
+<dd><p>Get data into a pandas DataFrame. Either custom SQL query, or full dataflow path.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>dataflow</strong> (<em>str</em>) – full dataflow path. (Pass either dataflow or sql.)</p></li>
+<li><p><strong>[</strong><strong>Optional</strong><strong>]</strong> (<em>connection</em>) – ODBC connection object.
+Defaults to None, in which case creates own connection.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>pd.DataFrame</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="dhsc_data_tools.tools.df_from_sql">
+<span class="sig-prename descclassname"><span class="pre">dhsc_data_tools.tools.</span></span><span class="sig-name descname"><span class="pre">df_from_sql</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">sql</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">connection</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Connection</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">DataFrame</span></span></span><a class="reference internal" href="_modules/dhsc_data_tools/tools.html#df_from_sql"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#dhsc_data_tools.tools.df_from_sql" title="Link to this definition"></a></dt>
+<dd><p>Get data into a pandas DataFrame. Either custom SQL query, or full dataflow path.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>sql</strong> (<em>str</em>) – sql query.</p></li>
+<li><p><strong>[</strong><strong>Optional</strong><strong>]</strong> (<em>connection</em>) – ODBC connection object.
+Defaults to None, in which case creates own connection.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>pd.DataFrame</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="dhsc_data_tools.tools.get_catalogs">
+<span class="sig-prename descclassname"><span class="pre">dhsc_data_tools.tools.</span></span><span class="sig-name descname"><span class="pre">get_catalogs</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">connection</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Connection</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">DataFrame</span></span></span><a class="reference internal" href="_modules/dhsc_data_tools/tools.html#get_catalogs"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#dhsc_data_tools.tools.get_catalogs" title="Link to this definition"></a></dt>
+<dd><p>Gets catalogs on the DAC.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>[</strong><strong>Optional</strong><strong>]</strong> (<em>connection</em>) – ODBC connection object.
+Defaults to None, in which case creates own connection.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>pd.DataFrame</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="dhsc_data_tools.tools.get_schemas">
+<span class="sig-prename descclassname"><span class="pre">dhsc_data_tools.tools.</span></span><span class="sig-name descname"><span class="pre">get_schemas</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">catalog</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">connection</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Connection</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">DataFrame</span></span></span><a class="reference internal" href="_modules/dhsc_data_tools/tools.html#get_schemas"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#dhsc_data_tools.tools.get_schemas" title="Link to this definition"></a></dt>
+<dd><p>Gets all schemas within the catalog.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>catalog</strong> (<em>str</em>) – catalog name.</p></li>
+<li><p><strong>[</strong><strong>Optional</strong><strong>]</strong> (<em>connection</em>) – ODBC connection object.
+Defaults to None, in which case creates own connection.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>pd.DataFrame</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="dhsc_data_tools.tools.get_table_info">
+<span class="sig-prename descclassname"><span class="pre">dhsc_data_tools.tools.</span></span><span class="sig-name descname"><span class="pre">get_table_info</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">catalog</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">schema</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">table</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">connection</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Connection</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">DataFrame</span></span></span><a class="reference internal" href="_modules/dhsc_data_tools/tools.html#get_table_info"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#dhsc_data_tools.tools.get_table_info" title="Link to this definition"></a></dt>
+<dd><p>Gets table description of a given table.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>catalog</strong> (<em>str</em>) – catalog name.</p></li>
+<li><p><strong>schema</strong> (<em>str</em>) – schema name.</p></li>
+<li><p><strong>table</strong> (<em>str</em>) – table name.</p></li>
+<li><p><strong>[</strong><strong>Optional</strong><strong>]</strong> (<em>connection</em>) – ODBC connection object.
+Defaults to None, in which case creates own connection.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>pd.DataFrame</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="dhsc_data_tools.tools.get_tables">
+<span class="sig-prename descclassname"><span class="pre">dhsc_data_tools.tools.</span></span><span class="sig-name descname"><span class="pre">get_tables</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">catalog</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">schema</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">connection</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Connection</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">DataFrame</span></span></span><a class="reference internal" href="_modules/dhsc_data_tools/tools.html#get_tables"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#dhsc_data_tools.tools.get_tables" title="Link to this definition"></a></dt>
+<dd><p>Gets all tables within a given schema.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>catalog</strong> (<em>str</em>) – catalog name.</p></li>
+<li><p><strong>schema</strong> (<em>str</em>) – schema name.</p></li>
+<li><p><strong>[</strong><strong>Optional</strong><strong>]</strong> (<em>connection</em>) – ODBC connection object.
+Defaults to None, in which case creates own connection.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>pd.DataFrame</p>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
+<section id="module-dhsc_data_tools">
+<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-dhsc_data_tools" title="Link to this heading"></a></h2>
+<p>This module allows users to interact with the DAC.</p>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="modules.html" class="btn btn-neutral float-left" title="dhsc_data_tools" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2025, DHSC.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

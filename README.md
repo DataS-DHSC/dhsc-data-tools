@@ -3,7 +3,7 @@
 **Stable branch: main**
 
 The goal of DHSCdatatools is to provide a suite of tools for using data hosted on the DHSC analytical cloud (DAC) platform. 
-[For detailed developer documentation click here.](https://github.com/DataS-DHSC/dhsc-data-tools/tree/main/docs/dhsc_data_tools)
+[For detailed documentation click here.](./docs/build/markdown/index.md)
 
 ## Pre-requisites
 
@@ -72,10 +72,38 @@ help(dac_odbc.connect) # or with any other module
 
 ```
 
+## QA Status
+
+Everything in the main branch has been through QA.
+
 ## Code of Conduct
 
 Please note that the DHSCdatatools project is released with a [Contributor Code of Conduct](https://contributor-covenant.org/version/2/1/CODE_OF_CONDUCT.html).
 By contributing to this project, you agree to abide by its terms.
+
+## Contributing
+
+Contributions are welcome.
+
+### Dev setup
+
+Install requirements from `pyproject.toml`.
+
+```
+pip install .
+```
+
+### Build
+
+```
+build .
+```
+
+### Update docs
+
+```
+sphinx-apidoc -o docs/source src/dhsc_data_tools && sphinx-build -M markdown docs/source/ docs/build/
+```
 
 ## Licence
 

@@ -1,0 +1,164 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>dhsc_data_tools.dac_odbc &mdash; dhsc-data-tools  documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=80d5e7a1" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=e59714d7" />
+
+  
+      <script src="../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../_static/documentation_options.js?v=5929fcd5"></script>
+      <script src="../../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../index.html" class="icon icon-home">
+            dhsc-data-tools
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../readme.html">Getting started</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../modules.html">dhsc_data_tools</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">dhsc-data-tools</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">dhsc_data_tools.dac_odbc</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for dhsc_data_tools.dac_odbc</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;Module allows to interact with DAC SQL endpoints.&quot;&quot;&quot;</span>
+
+<span class="kn">import</span> <span class="nn">pyodbc</span>
+<span class="kn">from</span> <span class="nn">pypac</span> <span class="kn">import</span> <span class="n">pac_context_for_url</span>
+
+<span class="kn">from</span> <span class="nn">dhsc_data_tools</span> <span class="kn">import</span> <span class="n">_auth_utils</span><span class="p">,</span> <span class="n">_constants</span>
+<span class="kn">from</span> <span class="nn">dhsc_data_tools.keyvault</span> <span class="kn">import</span> <span class="n">KVConnection</span>
+
+
+<div class="viewcode-block" id="connect">
+<a class="viewcode-back" href="../../dhsc_data_tools.html#dhsc_data_tools.dac_odbc.connect">[docs]</a>
+<span class="k">def</span> <span class="nf">connect</span><span class="p">(</span>
+    <span class="n">environment</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;prod&quot;</span><span class="p">,</span> <span class="n">refresh_token</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">pyodbc</span><span class="o">.</span><span class="n">Connection</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Allows to connect to data within the DAC, and use SQL queries.</span>
+
+<span class="sd">    Requires:</span>
+<span class="sd">        KEY_VAULT_NAME and DAC_TENANT environment variables.</span>
+<span class="sd">        Simba Spark ODBC Driver is required.</span>
+<span class="sd">        Request the latter through IT portal, install through company portal.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        environment (str): DAC environment. Defaults to &quot;prod&quot;.</span>
+<span class="sd">            Must be one of &quot;dev&quot;, &quot;qa&quot;, &quot;test&quot; or &quot;prod&quot;.</span>
+<span class="sd">        refresh_token (bool): When True, will trigger re-authentication</span>
+<span class="sd">            instead of using cached credentials. Defaults to fault.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        pyodbc.Connection</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="c1"># Set PAC context</span>
+    <span class="k">with</span> <span class="n">pac_context_for_url</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;https://</span><span class="si">{</span><span class="n">_constants</span><span class="o">.</span><span class="n">_AUTHORITY</span><span class="si">}</span><span class="s2">/&quot;</span><span class="p">):</span>
+        <span class="c1"># establish keyvault connection</span>
+        <span class="n">kvc</span> <span class="o">=</span> <span class="n">KVConnection</span><span class="p">(</span><span class="n">environment</span><span class="p">,</span> <span class="n">refresh_token</span><span class="o">=</span><span class="n">refresh_token</span><span class="p">)</span>
+        <span class="c1"># Define Azure Identity Credential</span>
+        <span class="n">credential</span> <span class="o">=</span> <span class="n">_auth_utils</span><span class="o">.</span><span class="n">_return_credential</span><span class="p">(</span><span class="n">_auth_utils</span><span class="o">.</span><span class="n">_return_tenant_id</span><span class="p">())</span>
+        <span class="c1"># Get token</span>
+        <span class="n">token</span> <span class="o">=</span> <span class="n">credential</span><span class="o">.</span><span class="n">get_token</span><span class="p">(</span><span class="n">_constants</span><span class="o">.</span><span class="n">_SCOPE</span><span class="p">)</span>
+        <span class="c1"># retrieve relevant key vault secrets</span>
+        <span class="n">host_name</span> <span class="o">=</span> <span class="n">kvc</span><span class="o">.</span><span class="n">get_secret</span><span class="p">(</span><span class="s2">&quot;dac-db-host&quot;</span><span class="p">)</span>
+        <span class="n">ep_path</span> <span class="o">=</span> <span class="n">kvc</span><span class="o">.</span><span class="n">get_secret</span><span class="p">(</span><span class="s2">&quot;dac-sql-endpoint-http-path&quot;</span><span class="p">)</span>
+
+    <span class="c1"># User warning</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Creating connection. This may take some time if cluster needs starting.&quot;</span><span class="p">)</span>
+
+    <span class="c1"># establish connection and return object</span>
+    <span class="n">conn</span> <span class="o">=</span> <span class="n">pyodbc</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span>
+        <span class="s2">&quot;Driver=Simba Spark ODBC Driver;&quot;</span>
+        <span class="o">+</span> <span class="sa">f</span><span class="s2">&quot;Host=</span><span class="si">{</span><span class="n">host_name</span><span class="si">}</span><span class="s2">;&quot;</span>  <span class="c1"># from keyvaults</span>
+        <span class="o">+</span> <span class="s2">&quot;Port=443;&quot;</span>
+        <span class="o">+</span> <span class="sa">f</span><span class="s2">&quot;HTTPPath=</span><span class="si">{</span><span class="n">ep_path</span><span class="si">}</span><span class="s2">;&quot;</span>  <span class="c1"># from keyvaults</span>
+        <span class="o">+</span> <span class="s2">&quot;SSL=1;&quot;</span>
+        <span class="o">+</span> <span class="s2">&quot;ThriftTransport=2;&quot;</span>
+        <span class="o">+</span> <span class="s2">&quot;AuthMech=11;&quot;</span>
+        <span class="o">+</span> <span class="s2">&quot;Auth_Flow=0;&quot;</span>
+        <span class="o">+</span> <span class="sa">f</span><span class="s2">&quot;Auth_AccessToken=</span><span class="si">{</span><span class="n">token</span><span class="o">.</span><span class="n">token</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span>  <span class="c1"># from azure identity credential</span>
+        <span class="n">autocommit</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+    <span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">conn</span></div>
+
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2025, DHSC.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>
