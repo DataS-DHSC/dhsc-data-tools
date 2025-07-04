@@ -2,7 +2,6 @@
 .virtual_documents/
 dist/
 build/*
-docs/build/
 .env
 .config
 config.yaml
