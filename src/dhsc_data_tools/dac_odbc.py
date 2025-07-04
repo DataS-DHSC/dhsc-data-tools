@@ -2,27 +2,31 @@
 
 import pyodbc
 from pypac import pac_context_for_url
-from dhsc_data_tools.keyvault import KVConnection
-from dhsc_data_tools import _utils
+
 from dhsc_data_tools import _constants
+from dhsc_data_tools.keyvault import KVConnection
+from src.dhsc_data_tools import _auth_utils
 
 
-def connect(environment: str = "prod", refresh_token: bool = False):
+def connect(
+    environment: str = "prod", refresh_token: bool = False
+) -> pyodbc.Connection:
     """Allows to connect to data within the DAC, and use SQL queries.
 
-    Parameters:
-    an `environment` argument, which defaults to "prod".
-    Must be one of "dev", "qa", "test" or "prod".
+    Args:
+    environment (str): DAC environment. Defaults to "prod".
+        Must be one of "dev", "qa", "test" or "prod".
 
-    `refresh_token`: when True, will trigger re-authentication
-    instead of using cached credentials. False by default.
+    refresh_token (bool): When True, will trigger re-authentication
+        instead of using cached credentials. Defaults to fault.
 
     Requires:
-    KEY_VAULT_NAME and DAC_TENANT environment variables.
-    Simba Spark ODBC Driver is required.
-    Request the latter through IT portal, install through company portal.
+        KEY_VAULT_NAME and DAC_TENANT environment variables.
+        Simba Spark ODBC Driver is required.
+        Request the latter through IT portal, install through company portal.
 
-    Returns: connection object.
+    Returns:
+        pyodbc.Connection
     """
 
     # Set PAC context
@@ -30,7 +34,7 @@ def connect(environment: str = "prod", refresh_token: bool = False):
         # establish keyvault connection
         kvc = KVConnection(environment, refresh_token=refresh_token)
         # Define Azure Identity Credential
-        credential = _utils._return_credential(_utils._return_tenant_id())
+        credential = _auth_utils._return_credential(_auth_utils._return_tenant_id())
         # Get token
         token = credential.get_token(_constants._SCOPE)
         # retrieve relevant key vault secrets
