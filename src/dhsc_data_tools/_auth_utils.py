@@ -3,14 +3,18 @@ These functions support underlying processes.
 They are not meant to be called directly.
 """
 
-import os
 import hashlib
 import json
+import os
 from pathlib import Path
+
 import platformdirs
-from azure.identity import InteractiveBrowserCredential
-from azure.identity import AuthenticationRecord
-from azure.identity import TokenCachePersistenceOptions
+from azure.identity import (
+    AuthenticationRecord,
+    InteractiveBrowserCredential,
+    TokenCachePersistenceOptions,
+)
+
 from dhsc_data_tools import _constants
 
 
