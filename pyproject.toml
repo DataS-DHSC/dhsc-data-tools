@@ -25,6 +25,7 @@ dependencies = [
 
 [project.optional-dependencies]
 dev = [
+  "isort",
   "pytest",
   "build",
   "ruff",

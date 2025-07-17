@@ -12,7 +12,7 @@ _conn = None
 logger = logging.getLogger(__name__)
 
 
-def _handle_client(connection: pyodbc.Connection = None) -> None:
+def _get_client(connection: pyodbc.Connection = None) -> None:
     """Handles connection to the DAC dac_odbc.connect. (Private method.)
 
     Args:
@@ -30,6 +30,8 @@ def _handle_client(connection: pyodbc.Connection = None) -> None:
         _conn = dac_odbc.connect()
     else:
         logger.info("Exisiting connection found...")
+
+    return _conn
 
 
 def _cursor_to_df(cursor: pyodbc.Connection) -> pd.DataFrame:
@@ -61,8 +63,8 @@ def _query_databricks(
     Returns:
         pyodbc.Cursor
     """
-    _handle_client(connection=connection)
-    cursor = _conn.cursor()
+    conn = _get_client(connection=connection)
+    cursor = conn.cursor()
     cursor.execute(sql_query)
 
     return cursor
