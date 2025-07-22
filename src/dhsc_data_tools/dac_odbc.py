@@ -21,7 +21,7 @@ def connect(
         environment (str): DAC environment. Defaults to "prod".
             Must be one of "dev", "qa", "test" or "prod".
         refresh_token (bool): When True, will trigger re-authentication
-            instead of using cached credentials. Defaults to fault.
+            instead of using cached credentials. Defaults to False.
 
     Returns:
         pyodbc.Connection

@@ -23,13 +23,9 @@ def _get_client(connection: pyodbc.Connection = None) -> None:
     """
     global _conn
     if connection:
-        logger.info("Using user defined DAC connection...")
         _conn = connection
     if not _conn:
-        logger.info("Setting up DAC connection...")
         _conn = dac_odbc.connect()
-    else:
-        logger.info("Exisiting connection found...")
 
     return _conn
 

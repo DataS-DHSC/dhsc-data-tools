@@ -11,7 +11,11 @@ The goal of DHSCdatatools is to provide a suite of tools for using data hosted o
 
 1. Local installation of Simba Spark ODBC Driver 32-bit and Simba Spark ODBC Driver 64-bit. Request these through the IT portal.
 
-2. Activate conda environment. To create a new env, in Git Bash:
+2. Activate conda environment. 
+
+> You may install `dhsc-data-tools` in an existing environment. However, its underlying dependencies conflict with `pyspark`. Ensure `pyspark` is **not** installed in this environment by running `pip uninstall pyspark`.
+
+To create a new env, in Git Bash:
 
 ```
 conda create -n <your_environment_name> python==3.12 pip
