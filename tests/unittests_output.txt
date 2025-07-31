@@ -1,9 +1,0 @@
-============================= test session starts =============================
-platform win32 -- Python 3.12.0, pytest-8.3.3, pluggy-1.5.0
-rootdir: C:\Users\RPordan\OneDrive - Department of Health and Social Care\Documents\1-PARA-System\1-Projects\dhsc-data-tools
-configfile: pyproject.toml
-collected 3 items
-
-tests\test_pytest.py ...                                                 [100%]
-
-============================= 3 passed in 34.87s ==============================
