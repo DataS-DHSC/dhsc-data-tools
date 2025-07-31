@@ -142,7 +142,7 @@ def get_table_info(
     return df
 
 
-def df_from_dataflow(
+def whole_table_to_df(
     dataflow: str, connection: pyodbc.Connection = None
 ) -> pd.DataFrame:
     """Get data into a pandas DataFrame. Either custom SQL query, or full dataflow path.
@@ -161,7 +161,7 @@ def df_from_dataflow(
     return df
 
 
-def df_from_sql(sql: str, connection: pyodbc.Connection = None) -> pd.DataFrame:
+def query_to_df(sql: str, connection: pyodbc.Connection = None) -> pd.DataFrame:
     """Get data into a pandas DataFrame. Either custom SQL query, or full dataflow path.
 
     Args:

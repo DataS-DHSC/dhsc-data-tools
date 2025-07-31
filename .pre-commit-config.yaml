@@ -6,14 +6,6 @@
 repos:
   - repo: local
     hooks:
-      - id: nbstripout
-        name: nbstripout
-        entry: nbstripout
-        language: system
-        types: [jupyter]
-        args: [ --extra-keys, "metadata.colab metadata.kernelspec cell.metadata.colab cell.metadata.executionInfo cell.metadata.id cell.metadata.outputId"]
-        require_serial: true
-
       - id: ruff-check
         name: ruff check
         description: "Run 'ruff check' for extremely fast Python linting"

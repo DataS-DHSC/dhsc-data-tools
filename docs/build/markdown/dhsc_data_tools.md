@@ -19,7 +19,7 @@ Requires:
   * **environment** (*str*) – DAC environment. Defaults to “prod”.
     Must be one of “dev”, “qa”, “test” or “prod”.
   * **refresh_token** (*bool*) – When True, will trigger re-authentication
-    instead of using cached credentials. Defaults to fault.
+    instead of using cached credentials. Defaults to False.
 * **Returns:**
   pyodbc.Connection
 
@@ -89,28 +89,6 @@ Requires:
 
 Tooling to work with DAC data.
 
-### dhsc_data_tools.tools.df_from_dataflow(dataflow: str, connection: Connection = None) → DataFrame
-
-Get data into a pandas DataFrame. Either custom SQL query, or full dataflow path.
-
-* **Parameters:**
-  * **dataflow** (*str*) – full dataflow path. (Pass either dataflow or sql.)
-  * **[****Optional****]** (*connection*) – ODBC connection object.
-    Defaults to None, in which case creates own connection.
-* **Returns:**
-  pd.DataFrame
-
-### dhsc_data_tools.tools.df_from_sql(sql: str, connection: Connection = None) → DataFrame
-
-Get data into a pandas DataFrame. Either custom SQL query, or full dataflow path.
-
-* **Parameters:**
-  * **sql** (*str*) – sql query.
-  * **[****Optional****]** (*connection*) – ODBC connection object.
-    Defaults to None, in which case creates own connection.
-* **Returns:**
-  pd.DataFrame
-
 ### dhsc_data_tools.tools.get_catalogs(connection: Connection = None) → DataFrame
 
 Gets catalogs on the DAC.
@@ -152,6 +130,28 @@ Gets all tables within a given schema.
 * **Parameters:**
   * **catalog** (*str*) – catalog name.
   * **schema** (*str*) – schema name.
+  * **[****Optional****]** (*connection*) – ODBC connection object.
+    Defaults to None, in which case creates own connection.
+* **Returns:**
+  pd.DataFrame
+
+### dhsc_data_tools.tools.query_to_df(sql: str, connection: Connection = None) → DataFrame
+
+Get data into a pandas DataFrame. Either custom SQL query, or full dataflow path.
+
+* **Parameters:**
+  * **sql** (*str*) – sql query.
+  * **[****Optional****]** (*connection*) – ODBC connection object.
+    Defaults to None, in which case creates own connection.
+* **Returns:**
+  pd.DataFrame
+
+### dhsc_data_tools.tools.whole_table_to_df(dataflow: str, connection: Connection = None) → DataFrame
+
+Get data into a pandas DataFrame. Either custom SQL query, or full dataflow path.
+
+* **Parameters:**
+  * **dataflow** (*str*) – full dataflow path. (Pass either dataflow or sql.)
   * **[****Optional****]** (*connection*) – ODBC connection object.
     Defaults to None, in which case creates own connection.
 * **Returns:**
