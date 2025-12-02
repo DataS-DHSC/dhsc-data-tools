@@ -19,7 +19,7 @@ pip install -e ".[dev,docs]"
 3. Then run this to update the docs.
 
 ```
-sphinx-apidoc -o docs/source src/dhsc_data_tools && sphinx-build -M markdown docs/source/ docs/build/
+sphinx-apidoc -o docs/source dhsc_data_tools && sphinx-build -M markdown docs/source/ docs/build/
 ```
 
 ## Building the package
