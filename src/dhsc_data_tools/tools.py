@@ -1,13 +1,17 @@
 """Tooling to work with DAC data."""
 
 import logging
+import warnings
 
 import pandas as pd
 import pyodbc
 
 from dhsc_data_tools import dac_odbc
+from dhsc_data_tools._backend_utils import _Sentinel
 
 _conn = None
+
+_sentinel = _Sentinel()
 
 logger = logging.getLogger(__name__)
 
@@ -142,30 +146,11 @@ def get_table_info(
     return df
 
 
-def whole_table_to_df(
-    dataflow: str, connection: pyodbc.Connection = None
-) -> pd.DataFrame:
-    """Get data into a pandas DataFrame. Either custom SQL query, or full dataflow path.
+def df_from_sql(sql: str, connection: pyodbc.Connection = None) -> pd.DataFrame:
+    """Load data as pandas.DataFrame from a custom SQL query.
 
     Args:
-        dataflow (str): full dataflow path. (Pass either dataflow or sql.)
-        connection [Optional] (pyodbc.Connection): ODBC connection object.
-            Defaults to None, in which case creates own connection.
-    Returns:
-        pd.DataFrame
-    """
-    query_string = f"SELECT * FROM {dataflow}"
-    cursor = _query_databricks(sql_query=query_string, connection=connection)
-    df = _cursor_to_df(cursor)
-
-    return df
-
-
-def query_to_df(sql: str, connection: pyodbc.Connection = None) -> pd.DataFrame:
-    """Get data into a pandas DataFrame. Either custom SQL query, or full dataflow path.
-
-    Args:
-        sql (str): sql query.
+        sql (str): SQL query.
         connection [Optional] (pyodbc.Connection): ODBC connection object.
             Defaults to None, in which case creates own connection.
     Returns:
@@ -173,5 +158,57 @@ def query_to_df(sql: str, connection: pyodbc.Connection = None) -> pd.DataFrame:
     """
     cursor = _query_databricks(sql_query=sql, connection=connection)
     df = _cursor_to_df(cursor)
+
+    return df
+
+
+def df_from_dataflow(
+    dataflow: str,
+    limit: int | _Sentinel | None = _sentinel,
+    columns: list[str] | None = None,
+    connection: pyodbc.Connection = None,
+) -> pd.DataFrame:
+    """Load data as pandas.DataFrame from a dataflow path.
+
+    Args:
+        dataflow (str): Full dataflow path.
+        limit (int | None | _SentinelType):
+            - `_sentinel` → argument not passed (defaults to 10)
+            - `None` → load full dataset
+            - `int` → limit rows
+        columns (list[str] | None): Columns to select.
+        connection (pyodbc.Connection | None): ODBC connection object.
+            Defaults to None, creates its own connection.
+
+    Returns:
+        pd.DataFrame
+    """
+    # Validate limit
+    if limit not in (_sentinel, None) and not isinstance(limit, int):
+        raise ValueError("`limit` must be int or None.")
+
+    # Validate columns
+    if columns is not None:
+        if not (isinstance(columns, list) and all(isinstance(c, str) for c in columns)):
+            raise ValueError("`columns` must be a list of strings.")
+        cols_string = ", ".join(columns)
+    else:
+        warnings.warn("Consider passing `columns` to load only what you need.")
+        cols_string = "*"
+
+    # Build query
+    if limit is _sentinel:
+        warnings.warn(
+            "No `limit` provided. Defaulting to 10 rows to avoid performance issues."
+        )
+        query = f"SELECT {cols_string} FROM {dataflow} LIMIT 10;"
+    elif limit is None:
+        warnings.warn("Loading the entire dataset. This may impact performance.")
+        query = f"SELECT {cols_string} FROM {dataflow};"
+    else:
+        query = f"SELECT {cols_string} FROM {dataflow} LIMIT {limit};"
+
+    # Execute query
+    df = df_from_sql(sql=query, connection=connection)
 
     return df
