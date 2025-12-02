@@ -41,7 +41,7 @@ def _get_authentication_record_filename(**kwargs):
     Get auth record hashed filename.
     """
     kwargs.setdefault("version", "1.0")
-    kwargs_hash = hashlib.sha1(
+    kwargs_hash = hashlib.sha256(
         json.dumps(kwargs, sort_keys=True).encode("utf-8")
     ).hexdigest()
 

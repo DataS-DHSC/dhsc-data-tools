@@ -60,7 +60,7 @@ before running kvconnection.get_secret().
 
 Module allows to run code on Azure Databricks clusters.
 
-### dhsc_data_tools.remote_compute.connect_cluster(profile: str = 'DEFAULT', file: str = 'config_yaml', cluster_uid: str | None = None) → DatabricksSession
+### dhsc_data_tools.remote_compute.connect_cluster(profile: str = 'DEFAULT', file: str = 'config.yaml', cluster_uid: str | None = None) → DatabricksSession
 
 Establishes a connection with a databricks compute cluster.
 
@@ -88,6 +88,33 @@ Requires:
 ## dhsc_data_tools.tools module
 
 Tooling to work with DAC data.
+
+### dhsc_data_tools.tools.df_from_dataflow(dataflow: str, limit: int | ~dhsc_data_tools._backend_utils._Sentinel | None = <dhsc_data_tools._backend_utils._Sentinel object>, columns: list[str] | None = None, connection: ~pyodbc.Connection = None) → DataFrame
+
+Load data as pandas.DataFrame from a dataflow path.
+
+* **Parameters:**
+  * **dataflow** (*str*) – Full dataflow path.
+  * **limit** (*int* *|* *None* *|*  *\_SentinelType*) – 
+    - \_sentinel → argument not passed (defaults to 10)
+    - None → load full dataset
+    - int → limit rows
+  * **columns** (*list* *[**str* *]*  *|* *None*) – Columns to select.
+  * **connection** (*pyodbc.Connection* *|* *None*) – ODBC connection object.
+    Defaults to None, creates its own connection.
+* **Returns:**
+  pd.DataFrame
+
+### dhsc_data_tools.tools.df_from_sql(sql: str, connection: Connection = None) → DataFrame
+
+Load data as pandas.DataFrame from a custom SQL query.
+
+* **Parameters:**
+  * **sql** (*str*) – SQL query.
+  * **[****Optional****]** (*connection*) – ODBC connection object.
+    Defaults to None, in which case creates own connection.
+* **Returns:**
+  pd.DataFrame
 
 ### dhsc_data_tools.tools.get_catalogs(connection: Connection = None) → DataFrame
 
@@ -130,28 +157,6 @@ Gets all tables within a given schema.
 * **Parameters:**
   * **catalog** (*str*) – catalog name.
   * **schema** (*str*) – schema name.
-  * **[****Optional****]** (*connection*) – ODBC connection object.
-    Defaults to None, in which case creates own connection.
-* **Returns:**
-  pd.DataFrame
-
-### dhsc_data_tools.tools.query_to_df(sql: str, connection: Connection = None) → DataFrame
-
-Get data into a pandas DataFrame. Either custom SQL query, or full dataflow path.
-
-* **Parameters:**
-  * **sql** (*str*) – sql query.
-  * **[****Optional****]** (*connection*) – ODBC connection object.
-    Defaults to None, in which case creates own connection.
-* **Returns:**
-  pd.DataFrame
-
-### dhsc_data_tools.tools.whole_table_to_df(dataflow: str, connection: Connection = None) → DataFrame
-
-Get data into a pandas DataFrame. Either custom SQL query, or full dataflow path.
-
-* **Parameters:**
-  * **dataflow** (*str*) – full dataflow path. (Pass either dataflow or sql.)
   * **[****Optional****]** (*connection*) – ODBC connection object.
     Defaults to None, in which case creates own connection.
 * **Returns:**
