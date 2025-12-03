@@ -1,9 +1,11 @@
 .ipynb_checkpoints/
 .virtual_documents/
-build/
+dist/
+build/*
 .env
 .config
 config.yaml
 __pycache__/
 .pytest_cache/
 .ruff_cache
+*.egg-info/

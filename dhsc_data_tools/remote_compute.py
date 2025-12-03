@@ -5,29 +5,31 @@ from databricks.connect import DatabricksSession
 
 
 def connect_cluster(
-    profile: str = "DEFAULT", file: str = r"config_yaml", cluster_uid: str | None = None
-):
+    profile: str = "DEFAULT", file: str = r"config.yaml", cluster_uid: str | None = None
+) -> DatabricksSession:
     """Establishes a connection with a databricks compute cluster.
 
     Requires:
-    It relies on a yaml configuration file in the working directory,
-    which by default reads `config.yaml`, containing profile entries
-    such as:
+        It relies on a yaml configuration file in the working directory,
+        which by default reads `config.yaml`, containing profile entries
+        such as:
 
-    your-profile-name:
-        host=xxx
-        token=xxx
-        cluster_id=xxx
+        your-profile-name:
+            host=xxx
+            token=xxx
+            cluster_id=xxx
 
-    NB: You can also pass a cluster_id parameter manually,
-        which will override the config file parameter.
+        You can also pass a cluster_id parameter manually, which will
+        override the config file parameter.
 
-    Parameters:
-    profile (config profile name defaults to "DEFAULT"),
-    file (the config file's name, you can pass a file path also),
-    cluster_uid (optional).
+    Args:
+        profile (str): config profile name defaults to "DEFAULT".
+        file (str): the config file's name or path.
+        cluster_uid [Optional] (str): specify cluster to run code on.
+            Connects to default shared if not specified.
 
-    Returns: a spark instance.
+    Returns:
+        DatabricksSession
     """
 
     # Get configuration
@@ -49,5 +51,4 @@ def connect_cluster(
             cluster_id=cfg[profile]["cluster_id"],
         ).getOrCreate()
 
-    # Return a spark instance
     return spark

@@ -1,15 +1,17 @@
+"""Tests for the package components."""
+
 import time
-import pytest
-from pypac import pac_context_for_url
-from dhsc_data_tools.dac_odbc import connect
-from dhsc_data_tools.keyvault import KVConnection
-from dhsc_data_tools.remote_compute import connect_cluster
 
 from dotenv import load_dotenv
+from pypac import pac_context_for_url
+
+from dhsc_data_tools.dac_odbc import connect
+from dhsc_data_tools.keyvault import KVConnection
+
+# from dhsc_data_tools.remote_compute import connect_cluster
+
 
 load_dotenv(".env")
-
-# Defining test cases
 
 
 def test_keyvaultconnection():
