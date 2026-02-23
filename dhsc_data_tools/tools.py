@@ -184,8 +184,11 @@ def df_from_dataflow(
         pd.DataFrame
     """
     # Validate limit
-    if limit not in (_sentinel, None) and not isinstance(limit, int) or limit <= 0:
-        raise ValueError("`limit` must be int or None and > 0.")
+    if limit not in (_sentinel, None) and not isinstance(limit, int):
+        raise ValueError("`limit` must be int or None.")
+
+    if isinstance(limit, int) and limit <= 0:
+        raise ValueError("`limit` must be bigger than zero.")
 
     # Validate columns
     if columns is not None:
