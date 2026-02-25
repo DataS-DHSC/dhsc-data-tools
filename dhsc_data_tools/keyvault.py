@@ -2,6 +2,7 @@
 
 import os
 
+from azure.identity import InteractiveBrowserCredential
 from azure.keyvault.secrets import SecretClient
 
 from dhsc_data_tools import _auth_utils
@@ -24,11 +25,17 @@ class KVConnection:
         KeyError: environment variables not found.
     """
 
-    def __init__(self, environment: str = "prod", refresh_token: bool = False):
+    def __init__(
+        self,
+        environment: str = "prod",
+        refresh_token: bool = False,
+        credential: InteractiveBrowserCredential | None = None,
+    ):
         # Check issues with the env name parameter input by user
         if environment.upper() not in ["DEV", "TEST", "QA", "PROD"]:
             raise ValueError(
-                "Environment name argument must be one of 'dev', 'test', 'qa', 'prod'."
+                "Environment name argument must be one of"
+                "'dev', 'test', 'qa', 'prod'."
             )
 
         temp_vault_name = os.getenv("KEY_VAULT_NAME")
@@ -48,12 +55,18 @@ class KVConnection:
         self.kv_uri = f"https://{self.vault_name}.vault.azure.net"
 
         # Define Azure Identity Credential
-        self.credential = _auth_utils._return_credential(
-            tenant_id=_auth_utils._return_tenant_id(), refresh_token=refresh_token
-        )
+        if credential:
+            self.credential = credential
+        else:
+            self.credential = _auth_utils._return_credential(
+                tenant_id=_auth_utils._return_tenant_id(),
+                refresh_token=refresh_token,
+            )
 
         # Establish Azure Keyvault SecretClient
-        self.client = SecretClient(vault_url=self.kv_uri, credential=self.credential)
+        self.client = SecretClient(
+            vault_url=self.kv_uri, credential=self.credential
+        )
 
     def get_secret(self, secret_name: str) -> str:
         """Returns the *value* of the secret.

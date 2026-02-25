@@ -18,7 +18,7 @@ from azure.identity import (
 from dhsc_data_tools import _constants
 
 
-def _return_tenant_id():
+def _return_tenant_id() -> str:
     """
     Find DAC_TENANT (tenant name) environment variable.
     to define tenant_id
@@ -36,61 +36,62 @@ def _return_tenant_id():
     return tenant_id
 
 
-def _get_authentication_record_filename(**kwargs):
+def _get_authentication_record_filename(**kwargs) -> str:
     """
     Get auth record hashed filename.
     """
     kwargs.setdefault("version", "1.0")
-    kwargs_hash = hashlib.sha256(
+    return hashlib.sha256(
         json.dumps(kwargs, sort_keys=True).encode("utf-8")
     ).hexdigest()
 
-    return kwargs_hash
 
-
-def _get_authentication_record_path(**kwargs):
+def _get_authentication_record_path(**kwargs) -> Path:
     """
     Get auth record path.
     """
     ar_base = Path(platformdirs.user_data_dir("dhsc_data_tools", "python"))
     if not ar_base.is_dir():
-        print("Creating a user data folder to save credentials to it at", ar_base)
+        print("Creating a user data folder to save credentials to at", ar_base)
     ar_base.mkdir(parents=True, exist_ok=True)
 
     return ar_base / _get_authentication_record_filename(**kwargs)
 
 
-def _read_authentication_record(authentication_record_path, use_cache=True):
+def _read_authentication_record(
+    authentication_record_path: Path, use_cache: bool = True
+) -> AuthenticationRecord | None:
     """
     Reads authentication record.
     """
     if (not use_cache) or (not authentication_record_path.is_file()):
         return None
 
-    with open(authentication_record_path, "rt", encoding="utf-8") as infile:
-        auth_rec = AuthenticationRecord.deserialize(infile.read())
-
-    return auth_rec
+    with authentication_record_path.open(encoding="utf-8") as infile:
+        return AuthenticationRecord.deserialize(infile.read())
 
 
 def _write_authentication_record(
-    authentication_record_path, authentication_record=None
-):
+    authentication_record_path: Path,
+    authentication_record: AuthenticationRecord | None = None,
+) -> None:
     """
     Write auth record if authentication_record return is other than None type.
     """
     if authentication_record is None:
-        pass
+        return
 
-    with open(authentication_record_path, "wt", encoding="utf-8") as outfile:
+    with authentication_record_path.open("w", encoding="utf-8") as outfile:
         outfile.write(authentication_record.serialize())
 
 
-def _return_credential(tenant_id: str, refresh_token: bool = False):
+def _return_credential(
+    refresh_token: bool = False,
+) -> InteractiveBrowserCredential:
     """
     Returns an interactive browser credential object.
     """
-
+    tenant_id = _return_tenant_id()
     # Authentication process, attempts cached authentication first
     authentication_record_path = _get_authentication_record_path(
         authority=_constants._AUTHORITY,
@@ -101,7 +102,9 @@ def _return_credential(tenant_id: str, refresh_token: bool = False):
     if refresh_token:
         authentication_record = None
     else:
-        authentication_record = _read_authentication_record(authentication_record_path)
+        authentication_record = _read_authentication_record(
+            authentication_record_path
+        )
 
     # Return credentia
     credential = InteractiveBrowserCredential(

@@ -1,11 +1,15 @@
 """Module allows to run code on Azure Databricks clusters."""
 
+from pathlib import Path
+
 import yaml
 from databricks.connect import DatabricksSession
 
 
 def connect_cluster(
-    profile: str = "DEFAULT", file: str = r"config.yaml", cluster_uid: str | None = None
+    profile: str = "DEFAULT",
+    config_path: Path = Path("config.yaml"),
+    cluster_uid: str | None = None,
 ) -> DatabricksSession:
     """Establishes a connection with a databricks compute cluster.
 
@@ -33,7 +37,7 @@ def connect_cluster(
     """
 
     # Get configuration
-    with open(file, mode="r", encoding="utf-8") as infile:
+    with config_path.open(encoding="utf-8") as infile:
         cfg = yaml.safe_load(infile)
 
     # Connect to cluster; if cluster_uid argument was given,

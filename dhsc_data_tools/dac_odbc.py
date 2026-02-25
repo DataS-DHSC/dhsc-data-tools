@@ -29,10 +29,14 @@ def connect(
 
     # Set PAC context
     with pac_context_for_url(f"https://{_constants._AUTHORITY}/"):
-        # establish keyvault connection
-        kvc = KVConnection(environment, refresh_token=refresh_token)
         # Define Azure Identity Credential
-        credential = _auth_utils._return_credential(_auth_utils._return_tenant_id())
+        credential = _auth_utils._return_credential(refresh_token)
+        # establish keyvault connection
+        kvc = KVConnection(
+            environment=environment,
+            refresh_token=refresh_token,
+            credential=credential,
+        )
         # Get token
         token = credential.get_token(_constants._SCOPE)
         # retrieve relevant key vault secrets
@@ -40,20 +44,23 @@ def connect(
         ep_path = kvc.get_secret("dac-sql-endpoint-http-path")
 
     # User warning
-    print("Creating connection. This may take some time if cluster needs starting.")
-
-    # establish connection and return object
-    conn = pyodbc.connect(
-        "Driver=Simba Spark ODBC Driver;"
-        + f"Host={host_name};"  # from keyvaults
-        + "Port=443;"
-        + f"HTTPPath={ep_path};"  # from keyvaults
-        + "SSL=1;"
-        + "ThriftTransport=2;"
-        + "AuthMech=11;"
-        + "Auth_Flow=0;"
-        + f"Auth_AccessToken={token.token}",  # from azure identity credential
-        autocommit=True,
+    print(
+        "Creating connection. "
+        "This may take some time if cluster needs starting."
     )
 
-    return conn
+    # establish connection and return object
+    return pyodbc.connect(
+        (
+            "Driver=Simba Spark ODBC Driver;"
+            f"Host={host_name};"  # from keyvaults
+            "Port=443;"
+            f"HTTPPath={ep_path};"  # from keyvaults
+            "SSL=1;"
+            "ThriftTransport=2;"
+            "AuthMech=11;"
+            "Auth_Flow=0;"
+            f"Auth_AccessToken={token.token}",  # from credential
+        ),
+        autocommit=True,
+    )
