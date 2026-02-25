@@ -1,4 +1,4 @@
-"""Module to interact with Azure Keyvaults"""
+"""Module to interact with Azure Keyvaults."""
 
 import os
 
@@ -9,21 +9,7 @@ from dhsc_data_tools import _auth_utils
 
 
 class KVConnection:
-    """Key vault connection object.
-
-    Requires:
-        KEY_VAULT_NAME and DAC_TENANT environment variables.
-
-    Args:
-        environment (str): DAC environment. Defaults to "prod".
-            Must be one of "dev", "qa", "test" or "prod".
-        refresh_token (bool): When True, will trigger re-authentication
-            instead of using cached credentials. Defaults to fault.
-
-    Raises:
-        ValueError: invalid environment.
-        KeyError: environment variables not found.
-    """
+    """Key vault connection object."""
 
     def __init__(
         self,
@@ -31,11 +17,29 @@ class KVConnection:
         refresh_token: bool = False,
         credential: InteractiveBrowserCredential | None = None,
     ):
+        """Initialize KVConnection object.
+
+        Requires:
+            KEY_VAULT_NAME and DAC_TENANT environment variables.
+
+        Args:
+            environment (str): DAC environment. Defaults to "prod".
+                Must be one of "dev", "qa", "test" or "prod".
+            refresh_token (bool): When True, will trigger re-authentication
+                instead of using cached credentials. Defaults to fault.
+            credential (InteractiveBrowserCredential):
+                Optional azure identity credential.
+
+        Raises:
+            ValueError: invalid environment.
+            KeyError: environment variables not found.
+
+        """
         # Check issues with the env name parameter input by user
         if environment.upper() not in ["DEV", "TEST", "QA", "PROD"]:
             raise ValueError(
                 "Environment name argument must be one of"
-                "'dev', 'test', 'qa', 'prod'."
+                "'dev', 'test', 'qa', 'prod'.",
             )
 
         temp_vault_name = os.getenv("KEY_VAULT_NAME")
@@ -49,7 +53,7 @@ class KVConnection:
                 KEY_VAULT_NAME environment variable not found.
                 Make sure KEY_VAULT_NAME is in your .env file
                 and .env file is loaded.
-                """
+                """,
             )
 
         self.kv_uri = f"https://{self.vault_name}.vault.azure.net"
@@ -59,17 +63,17 @@ class KVConnection:
             self.credential = credential
         else:
             self.credential = _auth_utils._return_credential(
-                tenant_id=_auth_utils._return_tenant_id(),
                 refresh_token=refresh_token,
             )
 
         # Establish Azure Keyvault SecretClient
         self.client = SecretClient(
-            vault_url=self.kv_uri, credential=self.credential
+            vault_url=self.kv_uri,
+            credential=self.credential,
         )
 
     def get_secret(self, secret_name: str) -> str:
-        """Returns the *value* of the secret.
+        """Return the *value* of the secret.
 
         Args:
         secret_name (str): name of the sought secret.
@@ -77,8 +81,6 @@ class KVConnection:
         Warning:
             User might have to set HTTP/HTTPS proxy as PAC context explicitly
             before running kvconnection.get_secret().
+
         """
-
-        print("Getting secret...")
-
-        return self.client.get_secret(secret_name).value
+        return str(self.client.get_secret(secret_name).value)

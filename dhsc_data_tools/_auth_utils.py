@@ -1,4 +1,5 @@
-"""
+"""Authentication utilities.
+
 These functions support underlying processes.
 They are not meant to be called directly.
 """
@@ -6,7 +7,9 @@ They are not meant to be called directly.
 import hashlib
 import json
 import os
+import warnings
 from pathlib import Path
+from typing import TypedDict
 
 import platformdirs
 from azure.identity import (
@@ -18,11 +21,14 @@ from azure.identity import (
 from dhsc_data_tools import _constants
 
 
+class AuthRecordHashParams(TypedDict):
+    authority: str
+    client_id: str
+    tenant_id: str
+
+
 def _return_tenant_id() -> str:
-    """
-    Find DAC_TENANT (tenant name) environment variable.
-    to define tenant_id
-    """
+    """Find DAC_TENANT (tenant name) environment variable."""
     tenant_id = os.getenv("DAC_TENANT")
     if tenant_id is None:
         raise KeyError(
@@ -30,40 +36,41 @@ def _return_tenant_id() -> str:
             DAC_TENANT environment variable not found.
             Make sure DAC_TENANT is in your .env file
             and .env file is loaded.
-            """
+            """,
         )
 
     return tenant_id
 
 
-def _get_authentication_record_filename(**kwargs) -> str:
-    """
-    Get auth record hashed filename.
-    """
-    kwargs.setdefault("version", "1.0")
+def _get_authentication_record_filename(params: AuthRecordHashParams) -> str:
+    """Get auth record hashed filename."""
+    params.setdefault("version", "1.0")  # type: ignore
     return hashlib.sha256(
-        json.dumps(kwargs, sort_keys=True).encode("utf-8")
+        json.dumps(params, sort_keys=True).encode("utf-8"),
     ).hexdigest()
 
 
-def _get_authentication_record_path(**kwargs) -> Path:
-    """
-    Get auth record path.
-    """
+def _get_authentication_record_path(params: AuthRecordHashParams) -> Path:
+    """Get auth record path."""
     ar_base = Path(platformdirs.user_data_dir("dhsc_data_tools", "python"))
     if not ar_base.is_dir():
-        print("Creating a user data folder to save credentials to at", ar_base)
+        warnings.warn(
+            (
+                f"Creating a user data folder to save credentials to at"
+                f"{ar_base}"
+            ),
+            stacklevel=2,
+        )
     ar_base.mkdir(parents=True, exist_ok=True)
 
-    return ar_base / _get_authentication_record_filename(**kwargs)
+    return ar_base / _get_authentication_record_filename(params)
 
 
 def _read_authentication_record(
-    authentication_record_path: Path, use_cache: bool = True
+    authentication_record_path: Path,
+    use_cache: bool = True,
 ) -> AuthenticationRecord | None:
-    """
-    Reads authentication record.
-    """
+    """Read authentication record."""
     if (not use_cache) or (not authentication_record_path.is_file()):
         return None
 
@@ -75,9 +82,7 @@ def _write_authentication_record(
     authentication_record_path: Path,
     authentication_record: AuthenticationRecord | None = None,
 ) -> None:
-    """
-    Write auth record if authentication_record return is other than None type.
-    """
+    """Write auth record if authentication_record else return None."""
     if authentication_record is None:
         return
 
@@ -88,22 +93,23 @@ def _write_authentication_record(
 def _return_credential(
     refresh_token: bool = False,
 ) -> InteractiveBrowserCredential:
-    """
-    Returns an interactive browser credential object.
-    """
+    """Return an interactive browser credential object."""
     tenant_id = _return_tenant_id()
+
     # Authentication process, attempts cached authentication first
     authentication_record_path = _get_authentication_record_path(
-        authority=_constants._AUTHORITY,
-        clientId=_constants._CLIENT_ID,
-        tenantId=tenant_id,
+        AuthRecordHashParams(
+            authority=_constants._AUTHORITY,
+            client_id=_constants._CLIENT_ID,
+            tenant_id=tenant_id,
+        ),
     )
 
     if refresh_token:
         authentication_record = None
     else:
         authentication_record = _read_authentication_record(
-            authentication_record_path
+            authentication_record_path,
         )
 
     # Return credentia
@@ -117,7 +123,8 @@ def _return_credential(
 
     if authentication_record is None:
         _write_authentication_record(
-            authentication_record_path, credential.authenticate()
+            authentication_record_path,
+            credential.authenticate(),
         )
 
     return credential

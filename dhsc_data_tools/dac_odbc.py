@@ -1,5 +1,7 @@
 """Module allows to interact with DAC SQL endpoints."""
 
+import warnings
+
 import pyodbc
 from pypac import pac_context_for_url
 
@@ -8,9 +10,13 @@ from dhsc_data_tools.keyvault import KVConnection
 
 
 def connect(
-    environment: str = "prod", refresh_token: bool = False
+    environment: str = "prod",
+    refresh_token: bool = False,
 ) -> pyodbc.Connection:
-    """Allows to connect to data within the DAC, and use SQL queries.
+    """Return connection object to the DAC.
+
+    Use connect the connection object returned to read data within the DAC,
+    and use SQL queries.
 
     Requires:
         KEY_VAULT_NAME and DAC_TENANT environment variables.
@@ -25,8 +31,8 @@ def connect(
 
     Returns:
         pyodbc.Connection
-    """
 
+    """
     # Set PAC context
     with pac_context_for_url(f"https://{_constants._AUTHORITY}/"):
         # Define Azure Identity Credential
@@ -44,9 +50,12 @@ def connect(
         ep_path = kvc.get_secret("dac-sql-endpoint-http-path")
 
     # User warning
-    print(
-        "Creating connection. "
-        "This may take some time if cluster needs starting."
+    warnings.warn(
+        (
+            "Creating connection. "
+            "This may take some time if cluster needs starting."
+        ),
+        stacklevel=2,
     )
 
     # establish connection and return object
@@ -60,7 +69,7 @@ def connect(
             "ThriftTransport=2;"
             "AuthMech=11;"
             "Auth_Flow=0;"
-            f"Auth_AccessToken={token.token}",  # from credential
+            f"Auth_AccessToken={token.token}"  # from credential
         ),
         autocommit=True,
     )

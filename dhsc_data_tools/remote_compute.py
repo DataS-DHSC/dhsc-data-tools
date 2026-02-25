@@ -4,14 +4,15 @@ from pathlib import Path
 
 import yaml
 from databricks.connect import DatabricksSession
+from pyspark.sql.session import SparkSession
 
 
 def connect_cluster(
     profile: str = "DEFAULT",
     config_path: Path = Path("config.yaml"),
     cluster_uid: str | None = None,
-) -> DatabricksSession:
-    """Establishes a connection with a databricks compute cluster.
+) -> SparkSession:
+    """Establish a connection with a databricks compute cluster.
 
     Requires:
         It relies on a yaml configuration file in the working directory,
@@ -28,14 +29,14 @@ def connect_cluster(
 
     Args:
         profile (str): config profile name defaults to "DEFAULT".
-        file (str): the config file's name or path.
-        cluster_uid [Optional] (str): specify cluster to run code on.
+        config_path (Path): the config file's path.
+        cluster_uid (str): Optional. Cluster to run code on.
             Connects to default shared if not specified.
 
     Returns:
         DatabricksSession
-    """
 
+    """
     # Get configuration
     with config_path.open(encoding="utf-8") as infile:
         cfg = yaml.safe_load(infile)

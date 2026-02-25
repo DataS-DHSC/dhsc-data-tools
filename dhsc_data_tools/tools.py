@@ -19,13 +19,15 @@ logger = logging.getLogger(__name__)
 def _get_client(
     connection: pyodbc.Connection | None = None,
 ) -> pyodbc.Connection:
-    """Handles connection to the DAC dac_odbc.connect.
+    """Handle connection with DAC dac_odbc.connect.
 
     Args:
-        connection [Optional] (pyodbc.Connection): ODBC connection object.
+        connection (pyodbc.Connection): Optional. ODBC connection object.
             Defaults to None, in which case creates own connection.
+
     Returns:
         pyodbc.Connection
+
     """
     global _conn
     if connection:
@@ -41,8 +43,10 @@ def _cursor_to_df(cursor: pyodbc.Cursor) -> pd.DataFrame:
 
     Args:
         cursor (pyodbc.Cursor): ODBC cursor to fetch data from.
+
     Returns:
         None
+
     """
     return pd.DataFrame(
         [tuple(t) for t in cursor.fetchall()],
@@ -51,16 +55,19 @@ def _cursor_to_df(cursor: pyodbc.Cursor) -> pd.DataFrame:
 
 
 def _query_databricks(
-    sql_query: str, connection: pyodbc.Connection | None = None
+    sql_query: str,
+    connection: pyodbc.Connection | None = None,
 ) -> pyodbc.Cursor:
-    """Sends SQL query to the DAC over a connection.
+    """Send SQL query to the DAC over a connection.
 
     Args:
         sql_query (str): and sql query as string.
-        connection [Optional] (pyodbc.Connection): ODBC connection object.
+        connection (pyodbc.Connection): Optional. ODBC connection object.
             Defaults to None, in which case creates own connection.
+
     Returns:
         pyodbc.Cursor
+
     """
     conn = _get_client(connection=connection)
     cursor = conn.cursor()
@@ -70,53 +77,65 @@ def _query_databricks(
 
 
 def get_catalogs(connection: pyodbc.Connection | None = None) -> pd.DataFrame:
-    """Gets catalogs on the DAC.
+    """Get catalogs on the DAC.
 
     Args:
-        connection [Optional] (pyodbc.Connection): ODBC connection object.
+        connection (pyodbc.Connection): Optional. ODBC connection object.
             Defaults to None, in which case creates own connection.
+
     Returns:
         pd.DataFrame
+
     """
     cursor = _query_databricks(
-        sql_query="SHOW CATALOGS", connection=connection
+        sql_query="SHOW CATALOGS",
+        connection=connection,
     )
     return _cursor_to_df(cursor)
 
 
 def get_schemas(
-    catalog: str, connection: pyodbc.Connection | None = None
+    catalog: str,
+    connection: pyodbc.Connection | None = None,
 ) -> pd.DataFrame:
-    """Gets all schemas within the catalog.
+    """Get all schemas within the catalog.
 
     Args:
         catalog (str): catalog name.
-        connection [Optional] (pyodbc.Connection): ODBC connection object.
+        connection (pyodbc.Connection): Optional. ODBC connection object.
             Defaults to None, in which case creates own connection.
+
     Returns:
         pd.DataFrame
+
     """
     cursor = _query_databricks(
-        sql_query=f"SHOW SCHEMAS IN {catalog}", connection=connection
+        sql_query=f"SHOW SCHEMAS IN {catalog}",
+        connection=connection,
     )
     return _cursor_to_df(cursor)
 
 
 def get_tables(
-    catalog: str, schema: str, connection: pyodbc.Connection | None = None
+    catalog: str,
+    schema: str,
+    connection: pyodbc.Connection | None = None,
 ) -> pd.DataFrame:
-    """Gets all tables within a given schema.
+    """Get all tables within a given schema.
 
     Args:
         catalog (str): catalog name.
         schema (str): schema name.
-        connection [Optional] (pyodbc.Connection): ODBC connection object.
+        connection (pyodbc.Connection): Optional. ODBC connection object.
             Defaults to None, in which case creates own connection.
+
     Returns:
         pd.DataFrame
+
     """
     cursor = _query_databricks(
-        f"SHOW TABLES IN {catalog}.{schema}", connection=connection
+        f"SHOW TABLES IN {catalog}.{schema}",
+        connection=connection,
     )
     return _cursor_to_df(cursor)
 
@@ -127,16 +146,18 @@ def get_table_info(
     table: str,
     connection: pyodbc.Connection | None = None,
 ) -> pd.DataFrame:
-    """Gets table description of a given table.
+    """Get table description of a given table.
 
     Args:
         catalog (str): catalog name.
         schema (str): schema name.
         table (str): table name.
-        connection [Optional] (pyodbc.Connection): ODBC connection object.
+        connection (pyodbc.Connection): Optional. ODBC connection object.
             Defaults to None, in which case creates own connection.
+
     Returns:
         pd.DataFrame
+
     """
     cursor = _query_databricks(
         f"DESCRIBE TABLE EXTENDED {catalog}.{schema}.{table}",
@@ -146,16 +167,19 @@ def get_table_info(
 
 
 def df_from_sql(
-    sql: str, connection: pyodbc.Connection | None = None
+    sql: str,
+    connection: pyodbc.Connection | None = None,
 ) -> pd.DataFrame:
     """Load data as pandas.DataFrame from a custom SQL query.
 
     Args:
         sql (str): SQL query.
-        connection [Optional] (pyodbc.Connection): ODBC connection object.
+        connection (pyodbc.Connection): Optional. ODBC connection object.
             Defaults to None, in which case creates own connection.
+
     Returns:
         pd.DataFrame
+
     """
     cursor = _query_databricks(sql_query=sql, connection=connection)
     return _cursor_to_df(cursor)
@@ -176,17 +200,20 @@ def df_from_dataflow(
             - `None` → load full dataset
             - `int` → limit rows
         columns (list[str] | None): Columns to select.
-        connection (pyodbc.Connection | None): ODBC connection object.
+        connection (pyodbc.Connection | None): Optional.
+            ODBC connection object.
             Defaults to None, creates its own connection.
 
     Returns:
         pd.DataFrame
+
     """
     # Validate limit
-    if (
-        limit not in (_sentinel, None) and not isinstance(limit, int)
-    ) or limit <= 0:
-        raise ValueError("`limit` must be int or None and > 0.")
+    if limit not in (_sentinel, None) and not isinstance(limit, int):
+        raise ValueError("`limit` must be int or None.")
+
+    if isinstance(limit, int) and limit <= 0:
+        raise ValueError("`limit` must be bigger than zero.")
 
     # Validate columns
     if columns is not None:
