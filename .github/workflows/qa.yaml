@@ -23,7 +23,7 @@ jobs:
 
       - name: Install Project Dependencies
         run: |
-          uv sync --group dev --group docs
+          uv sync --extra dev --extra docs
 
       - name: Run Ruff Linter
         run: uv run ruff check
