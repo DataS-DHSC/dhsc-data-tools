@@ -23,39 +23,10 @@ jobs:
 
       - name: Install Project Dependencies
         run: |
-          uv init
-          uv add -r requirements.txt
+          uv sync --group dev --group docs
 
       - name: Run Ruff Linter
         run: uv run ruff check
 
       - name: Run MyPy Type Check
         run: uv run mypy .
-
-  # all-tests:
-  #   name: Run tests
-  #   runs-on: ubuntu-latest
-
-  #   steps:
-  #     - name: Checkout Code
-  #       uses: actions/checkout@v4
-
-  #     - name: Install uv and Set Python Version
-  #       uses: astral-sh/setup-uv@v6
-  #       with:
-  #         python-version: "3.12"
-  #         cache-dependency-glob: ""
-
-  #     - name: Install Project Dependencies
-  #       run: |
-  #         uv init
-  #         uv add -r requirements.txt
-
-  #     - name: Run Tests
-  #       run: uv run pytest .
-
-  #     # - name: Upload dummy coverage to Codecov (skip if not present)
-  #     #   uses: codecov/codecov-action@v4
-  #     #   if: always()  # still runs even if no tests, but won't fail the job
-  #     #   with:
-  #     #     token: ${{ secrets.CODECOV_TOKEN }} 
