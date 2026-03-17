@@ -1,6 +1,6 @@
 [project]
 name = "dhsc_data_tools"
-version = "1.1.3"
+version = "1.2.0"
 authors = [
   { name="Data Science Hub", email="datascience@dhsc.gov.uk" },
 ]
@@ -41,6 +41,10 @@ docs = [
   "sphinx_rtd_theme",
   "sphinx-mdinclude",
 ]
+
+[tool.setuptools.packages.find]
+include = ["dhsc_data_tools*"]
+exclude = ["./type_stubs"]
 
 [project.urls]
 Homepage = "https://github.com/DataS-DHSC/dhsc-data-tools"
