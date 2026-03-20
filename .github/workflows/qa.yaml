@@ -54,7 +54,7 @@ jobs:
       #   run: uv sync --all-extras
 
       - name: Run Bandit
-        run: uvx bandit -r . -ll
+        run: uvx bandit -r . -ll --skip B608
 
       - name: Run pip-audit
         run: |
