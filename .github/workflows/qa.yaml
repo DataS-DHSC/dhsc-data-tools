@@ -27,8 +27,10 @@ jobs:
           python-version: "3.12"
           cache-dependency-glob: ""
 
-      - name: Install Project Dependencies
-        run: ./scripts/install_env.sh
+      - name: Install the project
+        run: |
+          uv init
+          uv sync --all-extras
 
       - name: Run Ruff Linter
         run: uv run ruff check .
@@ -51,7 +53,9 @@ jobs:
           python-version: ${{ inputs.python_version }}
 
       # - name: Install the project
-      #   run: ./scripts/install_env.sh
+      #   run: |
+      #     uv init
+      #     uv sync --all-extras
 
       - name: Run Ruff (Lint + Security rules)
         run: uvx ruff check . --select E,F,S
