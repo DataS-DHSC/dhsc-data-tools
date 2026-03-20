@@ -51,10 +51,7 @@ jobs:
           python-version: "3.12"
 
       - name: Create lock file
-        run: | 
-          uv lock
-          ls
-          cat uv.lock
+        run: uv lock
 
       - name: Install Trivy
         uses: aquasecurity/setup-trivy@v0.2.6
@@ -71,6 +68,6 @@ jobs:
       - name: Run Trivy Scan
         run: |
           trivy repo ./ \
-            # --ignore-unfixed \
+            --ignore-unfixed \
             --format table \
             --severity CRITICAL,HIGH
