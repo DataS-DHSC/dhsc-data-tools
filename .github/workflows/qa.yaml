@@ -57,15 +57,13 @@ jobs:
         run: uvx bandit -r . -ll --skip B608
 
       - name: Run pip-audit
-        run: |
-          if [ -f requirements.txt ]; then
-            uvx pip-audit -r requirements.txt
-          else
-            uvx pip-audit
-          fi
+        run: uvx pip-audit
 
       - name: Run Semgrep
         run: uvx semgrep --config=p/python .
+
+      - name: debug
+        run: ls -a
 
       - name: Run Trivy Scan
         run: |
