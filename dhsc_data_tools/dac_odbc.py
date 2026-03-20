@@ -1,5 +1,7 @@
 """Module allows to interact with DAC SQL endpoints."""
 
+import warnings
+
 import pyodbc
 from pypac import pac_context_for_url
 
@@ -8,9 +10,13 @@ from dhsc_data_tools.keyvault import KVConnection
 
 
 def connect(
-    environment: str = "prod", refresh_token: bool = False
+    environment: str = "prod",
+    refresh_token: bool = False,
 ) -> pyodbc.Connection:
-    """Allows to connect to data within the DAC, and use SQL queries.
+    """Return connection object to the DAC.
+
+    Use connect the connection object returned to read data within the DAC,
+    and use SQL queries.
 
     Requires:
         KEY_VAULT_NAME and DAC_TENANT environment variables.
@@ -25,14 +31,18 @@ def connect(
 
     Returns:
         pyodbc.Connection
-    """
 
+    """
     # Set PAC context
     with pac_context_for_url(f"https://{_constants._AUTHORITY}/"):
-        # establish keyvault connection
-        kvc = KVConnection(environment, refresh_token=refresh_token)
         # Define Azure Identity Credential
-        credential = _auth_utils._return_credential(_auth_utils._return_tenant_id())
+        credential = _auth_utils._return_credential(refresh_token)
+        # establish keyvault connection
+        kvc = KVConnection(
+            environment=environment,
+            refresh_token=refresh_token,
+            credential=credential,
+        )
         # Get token
         token = credential.get_token(_constants._SCOPE)
         # retrieve relevant key vault secrets
@@ -40,20 +50,26 @@ def connect(
         ep_path = kvc.get_secret("dac-sql-endpoint-http-path")
 
     # User warning
-    print("Creating connection. This may take some time if cluster needs starting.")
-
-    # establish connection and return object
-    conn = pyodbc.connect(
-        "Driver=Simba Spark ODBC Driver;"
-        + f"Host={host_name};"  # from keyvaults
-        + "Port=443;"
-        + f"HTTPPath={ep_path};"  # from keyvaults
-        + "SSL=1;"
-        + "ThriftTransport=2;"
-        + "AuthMech=11;"
-        + "Auth_Flow=0;"
-        + f"Auth_AccessToken={token.token}",  # from azure identity credential
-        autocommit=True,
+    warnings.warn(
+        (
+            "Creating connection. "
+            "This may take some time if cluster needs starting."
+        ),
+        stacklevel=2,
     )
 
-    return conn
+    # establish connection and return object
+    return pyodbc.connect(
+        (
+            "Driver=Simba Spark ODBC Driver;"
+            f"Host={host_name};"  # from keyvaults
+            "Port=443;"
+            f"HTTPPath={ep_path};"  # from keyvaults
+            "SSL=1;"
+            "ThriftTransport=2;"
+            "AuthMech=11;"
+            "Auth_Flow=0;"
+            f"Auth_AccessToken={token.token}"  # from credential
+        ),
+        autocommit=True,
+    )

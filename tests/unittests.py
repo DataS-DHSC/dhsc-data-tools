@@ -14,10 +14,8 @@ from dhsc_data_tools.keyvault import KVConnection
 load_dotenv(".env")
 
 
-def test_keyvaultconnection():
-    """
-    Test Azure keyvault connection.
-    """
+def test_keyvaultconnection() -> None:
+    """Test Azure keyvault connection."""
     with pac_context_for_url("https://www.google.co.uk"):
         kvc = KVConnection("DEV")
         my_key = kvc.get_secret("dummy-example-key")
@@ -25,10 +23,8 @@ def test_keyvaultconnection():
     time.sleep(3)
 
 
-def test_dac_odbc_connect():
-    """
-    Test ODBC driver connection.
-    """
+def test_dac_odbc_connect() -> None:
+    """Test ODBC driver connection."""
     conn = connect()
     cursor = conn.cursor()
     cursor.execute("SELECT * FROM samples.nyctaxi.trips LIMIT 10")
@@ -38,8 +34,6 @@ def test_dac_odbc_connect():
     time.sleep(3)
 
 
-def test_remote_compute_connect():
-    """
-    Test the running code on a dbricks compute cluster.
-    """
+def test_remote_compute_connect() -> None:
+    """Test the running code on a dbricks compute cluster."""
     pass
