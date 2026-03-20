@@ -67,5 +67,10 @@ jobs:
       - name: Run Semgrep
         run: uvx semgrep --config=p/python .
 
-      - name: Run Trivy
-        run: uvx trivy repo ./
+      - name: Run Trivy vulnerability scanner in repo mode
+        uses: aquasecurity/trivy-action@0.33.1
+        with:
+          scan-type: 'fs'
+          ignore-unfixed: true
+          format: 'table'
+          severity: 'CRITICAL, HIGH'
