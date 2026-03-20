@@ -28,8 +28,7 @@ jobs:
           cache-dependency-glob: ""
 
       - name: Install Project Dependencies
-        run: |
-          uv sync --extra dev --extra docs
+        run: ./scripts/install_env.sh
 
       - name: Run Ruff Linter
         run: uv run ruff check .
@@ -38,7 +37,38 @@ jobs:
         run: uv run mypy dhsc_data_tools
 
   security:
-    name: Code and Dependency Security Scan
-    uses: dhsc-govuk-internal/github-python-workflows/.github/workflows/security.yml@python-docker-bundle
-    with:
-      python_version: "3.12"
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.head_ref }}
+
+      - name: Install uv and set the Python version
+        uses: astral-sh/setup-uv@v6
+        with:
+          python-version: ${{ inputs.python_version }}
+
+      # - name: Install the project
+      #   run: ./scripts/install_env.sh
+
+      - name: Run Ruff (Lint + Security rules)
+        run: uvx ruff check . --select E,F,S
+
+      - name: Run Bandit
+        run: uvx bandit -r . -ll
+
+      - name: Run pip-audit
+        run: |
+          if [ -f requirements.txt ]; then
+            uvx pip-audit -r requirements.txt
+          else
+            uvx pip-audit
+          fi
+
+      - name: Run Semgrep
+        run: uvx semgrep --config=p/python .
+
+      - name: Run Trivy
+        run: uvx trivy repo ./
