@@ -209,11 +209,15 @@ def df_from_dataflow(
 
     """
     # Validate limit
+    limit_validation_message = (
+        "`limit` must be either None or a whole number greater than zero."
+    )
+
     if limit not in (_sentinel, None) and not isinstance(limit, int):
-        raise ValueError("`limit` must be int or None.")
+        raise ValueError(limit_validation_message)
 
     if isinstance(limit, int) and limit <= 0:
-        raise ValueError("`limit` must be bigger than zero.")
+        raise ValueError(limit_validation_message)
 
     # Validate columns
     if columns is not None:
