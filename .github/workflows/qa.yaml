@@ -39,6 +39,6 @@ jobs:
 
   security:
     name: Code and Dependency Security Scan
-    uses: dhsc-govuk-internal/github-python-workflows/.github/workflows/security.yml@2128989cb1015ceec6d8c88e6f7275f7cff28351
+    uses: dhsc-govuk-internal/github-python-workflows/.github/workflows/security.yml@python-docker-bundle
     with:
       python_version: "3.12"
