@@ -73,4 +73,4 @@ jobs:
           scan-type: 'fs'
           ignore-unfixed: true
           format: 'table'
-          severity: 'CRITICAL, HIGH'
+          severity: 'CRITICAL,HIGH'
