@@ -12,7 +12,7 @@ To create a new env, in Git Bash:
 conda create -n <your_environment_name> python==3.12 pip
 ```
 
-> Some of the dependencies of this package are not currently compatible with the latest Python 3.13. Use any python version from and including 3.8 and below 3.13. E.g. above `python==3.12` is specified.
+> Please use Python version 3.12. As above, `python==3.12` is specified. Some package dependencies are not currently compatible with the latest Python version, as the local Python version must match the current Databricks Runtime. [Read more here](https://docs.databricks.com/aws/en/dev-tools/databricks-connect/requirements#databricks-connect-versions).
 
 3. Though not strictly a package dependency, we recommend you install python-dotenv to work with environment variables.
 
