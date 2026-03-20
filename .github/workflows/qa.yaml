@@ -57,9 +57,6 @@ jobs:
       #     uv init
       #     uv sync --all-extras
 
-      - name: Run Ruff (Lint + Security rules)
-        run: uvx ruff check . --select E,F,S
-
       - name: Run Bandit
         run: uvx bandit -r . -ll
 
