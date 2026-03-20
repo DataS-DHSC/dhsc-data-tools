@@ -1,4 +1,4 @@
-name: QA
+name: QA and Security Scan
 
 on:
   pull_request:
@@ -7,9 +7,17 @@ on:
       - main
       - canary
 
+concurrency:
+  group: checks-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  PYTHON_VERSION: "3.12"
+
 jobs:
-  lint-and-qa:
-    name: Lint & QA Checks
+
+  qa:
+    name: Code QA Checks
     runs-on: ubuntu-latest
 
     steps:
@@ -19,7 +27,7 @@ jobs:
       - name: Install uv and Set Python Version
         uses: astral-sh/setup-uv@v6
         with:
-          python-version: "3.12"
+          python-version: ${{ env.PYTHON_VERSION }}
           cache-dependency-glob: ""
 
       - name: Install Project Dependencies
@@ -31,3 +39,9 @@ jobs:
 
       - name: Run MyPy Type Check
         run: uv run mypy dhsc_data_tools
+
+  security:
+    name: Code and Dependency Security Scan
+    uses: dhsc-govuk-internal/github-python-workflows/.github/workflows/security.yml@2128989cb1015ceec6d8c88e6f7275f7cff28351
+    with:
+      python_version: ${{ env.PYTHON_VERSION }}
