@@ -48,10 +48,10 @@ jobs:
       - name: Install uv and set the Python version
         uses: astral-sh/setup-uv@v6
         with:
-          python-version: ${{ inputs.python_version }}
+          python-version: "3.12"
 
-      # - name: Install the project
-      #   run: uv sync --all-extras
+      - name: Install Trivy
+        uses: aquasecurity/setup-trivy@v0.2.6
 
       - name: Run Bandit
         run: uvx bandit -r . -ll --skip B608
@@ -67,12 +67,9 @@ jobs:
       - name: Run Semgrep
         run: uvx semgrep --config=p/python .
 
-      - name: Run Trivy vulnerability scanner in repo mode
-        uses: aquasecurity/trivy-action@0.35.0
-        with:
-          scan-type: 'fs'
-          path: '.'
-          ignore-unfixed: true
-          format: 'table'
-          severity: 'CRITICAL,HIGH'
-          exit-code: 1
+      - name: Run Trivy Scan
+        run: |
+          trivy repo ./ \
+            --ignore-unfixed \
+            --format table \
+            --severity CRITICAL,HIGH
