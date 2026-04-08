@@ -86,11 +86,7 @@ select = [
 
 ignore = ["PLW0603", "S608"]
 
-[tool.ruff.format]
-quote-style = "double"
-indent-style = "space"
-
-[tool.ruff.per-file-ignores]
+[tool.ruff.lint.per-file-ignores]
 "tests/*.py" = [
     "S101",  # allow asserts in tests
 ]
@@ -100,3 +96,7 @@ indent-style = "space"
   "PTH100", # ignore use of os.path
   "D100",   # ignore missing docstring
 ]
+
+[tool.ruff.format]
+quote-style = "double"
+indent-style = "space"
