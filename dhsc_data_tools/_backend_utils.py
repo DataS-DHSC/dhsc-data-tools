@@ -1,4 +1,4 @@
-"""Backend utilities"""
+"""Backend utilities."""
 
 
 class _Sentinel:

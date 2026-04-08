@@ -1,0 +1,73 @@
+name: QA and Security Scan
+
+on:
+  pull_request:
+  push:
+    branches:
+      - main
+      - canary
+
+concurrency:
+  group: checks-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+
+  qa:
+    name: Code QA Checks
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Install uv and Set Python Version
+        uses: astral-sh/setup-uv@v6
+        with:
+          python-version: "3.12"
+          cache-dependency-glob: ""
+
+      - name: Install the project
+        run: uv sync --all-extras
+
+      - name: Run Ruff Linter
+        run: uv run ruff check .
+
+      - name: Run MyPy Type Check
+        run: uv run mypy dhsc_data_tools
+
+  security:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.head_ref }}
+
+      - name: Install uv and set the Python version
+        uses: astral-sh/setup-uv@v6
+        with:
+          python-version: "3.12"
+
+      - name: Create lock file
+        run: uv lock
+
+      - name: Install Trivy
+        uses: aquasecurity/setup-trivy@v0.2.6
+
+      - name: Run Bandit
+        run: uvx bandit -r . -ll --skip B608
+
+      - name: Run pip-audit
+        run: uvx pip-audit
+
+      - name: Run Semgrep
+        run: uvx semgrep --config=p/python .
+
+      - name: Run Trivy Scan
+        run: |
+          trivy repo ./ \
+            --ignore-unfixed \
+            --format table \
+            --severity CRITICAL,HIGH
